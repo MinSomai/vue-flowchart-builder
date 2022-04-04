@@ -1,7 +1,9 @@
 <script setup>
 import { shallowRef, defineProps, onMounted, getCurrentInstance } from "vue";
+
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
-import FlowGroup from "./FlowGroup.vue";
+
+import FlowGroup from "@/components/FlowGroup.vue";
 
 const instance = getCurrentInstance();
 

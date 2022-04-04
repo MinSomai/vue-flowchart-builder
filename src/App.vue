@@ -1,90 +1,9 @@
 <script setup>
-import { reactive } from "vue";
 import FlowGroup from "./components/FlowGroup.vue";
 
-let schema = reactive({
-  symbol: "container",
-  children: [
-    {
-      type: "single",
-      schema: {
-        symbol: "start",
-      },
-    },
-    {
-      type: "single",
-      schema: {
-        symbol: "process",
-      },
-    },
-    {
-      type: "single",
-      schema: {
-        symbol: "process",
-        hasGroup: true,
-        children: {
-          type: "group",
-          schema: {
-            symbol: "decision",
-            children: [
-              {
-                type: "single",
-                schema: {
-                  symbol: "process",
-                  hasGroup: true,
-                  children: {
-                    type: "group",
-                    schema: {
-                      symbol: "decision",
-                      children: [
-                        {
-                          type: "single",
-                          schema: {
-                            symbol: "process",
-                          },
-                        },
-                        {
-                          type: "single",
-                          schema: {
-                            symbol: "process",
-                          },
-                        },
-                        {
-                          type: "single",
-                          schema: {
-                            symbol: "process",
-                          },
-                        },
-                      ],
-                    },
-                  },
-                },
-              },
-              {
-                type: "single",
-                schema: {
-                  symbol: "process",
-                },
-              },
-              {
-                type: "single",
-                schema: {
-                  symbol: "process",
-                },
-              },
-            ],
-          },
-        },
-      },
-    },
-    {
-      type: "single",
-      schema: {
-        symbol: "stop",
-      },
-    },
-  ],
-});
+import { useFlowchartBuilder } from "@/composables/useFlowchartBuilder";
+
+const { schema } = useFlowchartBuilder();
 </script>
 
 <template>
