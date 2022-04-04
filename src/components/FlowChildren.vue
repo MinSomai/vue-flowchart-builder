@@ -1,6 +1,7 @@
 <script setup>
 import { shallowRef, defineProps, onMounted, getCurrentInstance } from "vue";
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
+import FlowGroup from "./FlowGroup.vue";
 
 const instance = getCurrentInstance();
 
@@ -24,9 +25,14 @@ const getComponent = (type) => {
 </script>
 <template>
   <div class="group-children">
-    <!-- <pre>{{ schema.children }}</pre> -->
-    <template v-for="(child, index) in schema.children" :key="index">
+    <template v-if="!schema.children">
+      <FlowGroup :depth="depth" :index="0" :max-depth="maxDepth" v-model:schema="schema.schema" />
+    </template>
+
+    <template v-else>
       <component
+        v-for="(child, index) in schema.children"
+        :key="index"
         :is="getComponent(child.type)"
         :type="child.type"
         v-model:schema="child.schema"

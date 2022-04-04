@@ -65,6 +65,7 @@ defineExpose({
       <div :class="`group-head depth-${depth} ${schema.symbol}`" v-if="schema.symbol == 'container'">
         Vue Flowchart Builder
       </div>
+      <div :class="`group-head depth-${depth} ${schema.symbol}`" v-if="schema.symbol == 'process'">process</div>
     </div>
 
     <div class="group-body">

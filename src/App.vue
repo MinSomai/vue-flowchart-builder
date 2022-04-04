@@ -18,145 +18,63 @@ let schema = reactive({
       },
     },
     {
-      type: "group",
+      type: "single",
       schema: {
-        symbol: "decision",
-        children: [
-          {
-            type: "single",
-            schema: {
-              symbol: "process",
-              hasGroup: true,
-            },
+        symbol: "process",
+        hasGroup: true,
+        children: {
+          type: "group",
+          schema: {
+            symbol: "decision",
+            children: [
+              {
+                type: "single",
+                schema: {
+                  symbol: "process",
+                  hasGroup: true,
+                  children: {
+                    type: "group",
+                    schema: {
+                      symbol: "decision",
+                      children: [
+                        {
+                          type: "single",
+                          schema: {
+                            symbol: "process",
+                          },
+                        },
+                        {
+                          type: "single",
+                          schema: {
+                            symbol: "process",
+                          },
+                        },
+                        {
+                          type: "single",
+                          schema: {
+                            symbol: "process",
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+              {
+                type: "single",
+                schema: {
+                  symbol: "process",
+                },
+              },
+              {
+                type: "single",
+                schema: {
+                  symbol: "process",
+                },
+              },
+            ],
           },
-          {
-            type: "group",
-            schema: {
-              symbol: "decision",
-              children: [
-                {
-                  type: "single",
-                  schema: {
-                    symbol: "process",
-                  },
-                },
-                {
-                  type: "group",
-                  schema: {
-                    symbol: "decision",
-                    children: [
-                      {
-                        type: "single",
-                        schema: {
-                          symbol: "process",
-                        },
-                      },
-                      {
-                        type: "group",
-                        schema: {
-                          symbol: "decision",
-                          children: [
-                            {
-                              type: "single",
-                              schema: {
-                                symbol: "process",
-                              },
-                            },
-                            {
-                              type: "single",
-                              schema: {
-                                symbol: "process",
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        type: "single",
-                        schema: {
-                          symbol: "process",
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  type: "single",
-                  schema: {
-                    symbol: "process",
-                  },
-                },
-              ],
-            },
-          },
-          {
-            type: "single",
-            schema: {
-              symbol: "process",
-              hasGroup: true,
-            },
-          },
-          {
-            type: "group",
-            schema: {
-              symbol: "decision",
-              children: [
-                {
-                  type: "single",
-                  schema: {
-                    symbol: "process",
-                  },
-                },
-                {
-                  type: "group",
-                  schema: {
-                    symbol: "decision",
-                    children: [
-                      {
-                        type: "single",
-                        schema: {
-                          symbol: "process",
-                        },
-                      },
-                      {
-                        type: "single",
-                        schema: {
-                          symbol: "process",
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  type: "single",
-                  schema: {
-                    symbol: "process",
-                  },
-                },
-                {
-                  type: "group",
-                  schema: {
-                    symbol: "decision",
-                    children: [
-                      {
-                        type: "single",
-                        schema: {
-                          symbol: "process",
-                        },
-                      },
-                      {
-                        type: "single",
-                        schema: {
-                          symbol: "process",
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
+        },
       },
     },
     {
