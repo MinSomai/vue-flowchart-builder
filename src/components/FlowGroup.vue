@@ -39,12 +39,10 @@ defineExpose({
 <template>
   <div class="group" :class="'depth-' + depth.toString()">
     <template v-if="schema.symbol">
-      <div :class="`group-head depth-${depth} ${schema.symbol}`" v-if="schema.symbol == 'decision'">
-        <Decision />
-      </div>
-      <div :class="`group-head depth-${depth} ${schema.symbol}`" v-if="schema.symbol == 'parallel'">parallel</div>
-      <div :class="`group-head depth-${depth} ${schema.symbol}`" v-if="schema.symbol == 'container'">
-        Vue Flowchart Builder
+      <div :class="`group-head depth-${depth} ${schema.symbol}`">
+        <Decision v-if="schema.symbol == 'decision'" />
+        <div v-if="schema.symbol == 'parallel'">Parallel</div>
+        <div v-if="schema.symbol == 'container'">Vue Flowchart Builder</div>
       </div>
     </template>
 

@@ -25,29 +25,24 @@ const { remove, updateSchema } = useSymbols({ schema: schema.value });
 
 <template>
   <div class="single" v-if="schema.symbol">
-    <template v-if="!schema.hasGroup">
-      <div :class="`symbol ${schema.symbol}`" v-if="schema.symbol == 'start'">
-        <Start />
-      </div>
-      <div :class="`symbol ${schema.symbol}`" v-if="schema.symbol == 'stop'">
-        <Stop />
-      </div>
-      <div :class="`symbol ${schema.symbol}`" v-if="schema.symbol == 'process'">
-        <Process />
-      </div>
-      <div :class="`symbol ${schema.symbol}`" v-if="schema.symbol == 'data'">
-        <Data />
-      </div>
-    </template>
-
-    <div class="group-body" v-else>
-      <div :class="`symbol ${schema.symbol}`" v-if="schema.symbol == 'start'">
-        <Start />
-      </div>
-      <div :class="`symbol ${schema.symbol}`" v-if="schema.symbol == 'process'">
-        <Process />
+    <div
+      :class="`group-body ${schema.children && schema.children.constructor.name == 'Object' ? 'single-group': ''}`"
+      v-if="schema.children && schema.children.constructor.name == 'Object'"
+    >
+      <div :class="`symbol ${schema.symbol} single-group-head`">
+        <Start v-if="schema.symbol == 'start'" />
+        <Process v-if="schema.symbol == 'process'" />
       </div>
       <FlowChildren :class="`depth-${depth}`" v-bind="$props" :schema="schema.children" />
     </div>
+
+    <template v-else>
+      <div :class="`symbol ${schema.symbol}`">
+        <Start v-if="schema.symbol == 'start'" />
+        <Stop v-if="schema.symbol == 'stop'" />
+        <Process v-if="schema.symbol == 'process'" />
+        <Data v-if="schema.symbol == 'data'" />
+      </div>
+    </template>
   </div>
 </template>

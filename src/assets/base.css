@@ -74,18 +74,21 @@ body {
 }
 
 .group-children{
-  column-gap: 20px;
+  column-gap: 100px;
 }
 
 .group-children:not(.depth-0) {
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
 }
+
 .group-children.depth-0 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 20px;
+  row-gap: 70px;
 }
 
 .group {
@@ -93,7 +96,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  row-gap: 20px;
+  row-gap: 70px;
 }
 
 .single .group-body{
@@ -101,7 +104,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 20px;
+  row-gap: 70px;
 }
 
 .single .group-body .symbol.process {

@@ -21,9 +21,9 @@ export const useFlowchartBuilder = () => {
       },
       {
         type: "single",
+        hasGroup: true,
         schema: {
           symbol: "process",
-          hasGroup: true,
           children: {
             type: "group",
             schema: {
@@ -31,20 +31,14 @@ export const useFlowchartBuilder = () => {
               children: [
                 {
                   type: "single",
+                  hasGroup: true,
                   schema: {
                     symbol: "process",
-                    hasGroup: true,
                     children: {
                       type: "group",
                       schema: {
                         symbol: "decision",
                         children: [
-                          {
-                            type: "single",
-                            schema: {
-                              symbol: "process",
-                            },
-                          },
                           {
                             type: "single",
                             schema: {
@@ -64,14 +58,29 @@ export const useFlowchartBuilder = () => {
                 },
                 {
                   type: "single",
+                  hasGroup: true,
                   schema: {
                     symbol: "process",
-                  },
-                },
-                {
-                  type: "single",
-                  schema: {
-                    symbol: "process",
+                    children: {
+                      type: "group",
+                      schema: {
+                        symbol: "decision",
+                        children: [
+                          {
+                            type: "single",
+                            schema: {
+                              symbol: "process",
+                            },
+                          },
+                          {
+                            type: "single",
+                            schema: {
+                              symbol: "process",
+                            },
+                          },
+                        ],
+                      },
+                    },
                   },
                 },
               ],

@@ -26,12 +26,8 @@ const getComponent = (type) => {
 };
 </script>
 <template>
-  <div class="group-children">
-    <template v-if="!schema.children">
-      <FlowGroup :depth="depth" :index="0" :max-depth="maxDepth" v-model:schema="schema.schema" />
-    </template>
-
-    <template v-else>
+  <div :class="`group-children ${schema.children ? '': 'single-group-children'}`">
+    <template v-if="schema.children">
       <component
         v-for="(child, index) in schema.children"
         :key="index"
@@ -43,6 +39,10 @@ const getComponent = (type) => {
         :depth="depth + 1"
         @child-deletion-requested="$parent.removeChild"
       />
+    </template>
+
+    <template v-else>
+      <FlowGroup :depth="depth" :index="0" :max-depth="maxDepth" v-model:schema="schema.schema" />
     </template>
   </div>
 </template>
