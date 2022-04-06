@@ -1,5 +1,5 @@
 <script setup>
-import { shallowRef, defineProps, onMounted, getCurrentInstance } from "vue";
+import { shallowRef, onMounted, getCurrentInstance } from "vue";
 
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
 
@@ -17,8 +17,10 @@ const flowGroup = shallowRef(null);
 const flowSingle = shallowRef(null);
 
 onMounted(() => {
-  flowGroup.value = instance.parent.exposed.FlowGroup;
-  flowSingle.value = instance.parent.exposed.FlowSingle;
+  if (Object.keys(instance.parent.exposed).length !== 0) {
+    flowGroup.value = instance.parent.exposed.FlowGroup;
+    flowSingle.value = instance.parent.exposed.FlowSingle;
+  }
 });
 
 const getComponent = (type) => {
@@ -26,7 +28,7 @@ const getComponent = (type) => {
 };
 </script>
 <template>
-  <div :class="`group-children ${schema.children ? '': 'single-group-children'}`">
+  <div :class="`group-children ${schema.children ? '' : 'single-group-body'}`">
     <template v-if="schema.children">
       <component
         v-for="(child, index) in schema.children"
@@ -41,8 +43,10 @@ const getComponent = (type) => {
       />
     </template>
 
-    <template v-else>
+    <div class="single-group-children" v-else>
+      <!-- For case when single is used as a composite. -->
+      <!-- But with only one child. Not composite, but different than single/leaf. -->
       <FlowGroup :depth="depth" :index="0" :max-depth="maxDepth" v-model:schema="schema.schema" />
-    </template>
+    </div>
   </div>
 </template>

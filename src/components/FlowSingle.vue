@@ -25,14 +25,13 @@ const { remove, updateSchema } = useSymbols({ schema: schema.value });
 
 <template>
   <div class="single" v-if="schema.symbol">
-    <div
-      :class="`group-body ${schema.children && schema.children.constructor.name == 'Object' ? 'single-group': ''}`"
-      v-if="schema.children && schema.children.constructor.name == 'Object'"
-    >
+    <div :class="`group-body ${schema.children ? 'single-group' : ''}`" v-if="schema.children">
       <div :class="`symbol ${schema.symbol} single-group-head`">
         <Start v-if="schema.symbol == 'start'" />
         <Process v-if="schema.symbol == 'process'" />
+        <Data v-if="schema.symbol == 'data'" />
       </div>
+
       <FlowChildren :class="`depth-${depth}`" v-bind="$props" :schema="schema.children" />
     </div>
 

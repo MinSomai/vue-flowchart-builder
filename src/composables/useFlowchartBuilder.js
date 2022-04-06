@@ -21,7 +21,6 @@ export const useFlowchartBuilder = () => {
       },
       {
         type: "single",
-        hasGroup: true,
         schema: {
           symbol: "process",
           children: {
@@ -31,7 +30,6 @@ export const useFlowchartBuilder = () => {
               children: [
                 {
                   type: "single",
-                  hasGroup: true,
                   schema: {
                     symbol: "process",
                     children: {
@@ -58,7 +56,6 @@ export const useFlowchartBuilder = () => {
                 },
                 {
                   type: "single",
-                  hasGroup: true,
                   schema: {
                     symbol: "process",
                     children: {

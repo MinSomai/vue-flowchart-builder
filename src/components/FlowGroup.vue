@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, markRaw, defineProps, defineExpose } from "vue";
+import { markRaw } from "vue";
 
 import Decision from "@/svg/Decision.vue";
 
