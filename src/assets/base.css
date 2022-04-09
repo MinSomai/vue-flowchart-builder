@@ -73,7 +73,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.group-children{
+.group-children {
   column-gap: 100px;
 }
 
@@ -88,7 +88,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 70px;
+  row-gap: 90px;
 }
 
 .group {
@@ -96,19 +96,75 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  row-gap: 70px;
+  row-gap: 90px;
 }
 
-.single .group-body{
+.single {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.symbol {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.symbol:not(.stop)::after {
+  content: "";
+  height: 100px;
+  width: 1px;
+  background: black;
+  position: absolute;
+  top: 100%;
+}
+
+.single > .symbol {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  row-gap: 10px;
+}
+
+.single > .symbol svg {
+  grid-row: 1/-1;
+  grid-column: 1/-1;
+}
+
+.single > .symbol .options-menu {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  column-gap: 10px;
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 100%;
+  transition: all 0.3s;
+  grid-row: 2/-1;
+  grid-column: 1/-1;
+}
+.single > .symbol:hover .options-menu {
+  visibility: visible;
+  opacity: 1;
+}
+
+.options-menu .menu-item {
+  border: 1px solid gray;
+  border-radius: 12px;
+  padding: 3px 4px;
+  min-width: 70px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.single .group-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 70px;
-}
-
-.single .group-body .symbol.process {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  row-gap: 90px;
 }

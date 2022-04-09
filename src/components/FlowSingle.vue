@@ -24,7 +24,7 @@ const { remove, updateSchema } = useSymbols({ schema: schema.value });
 </script>
 
 <template>
-  <div class="single" v-if="schema.symbol">
+  <div :class="`single ${schema.symbol}`" v-if="schema.symbol">
     <div :class="`group-body ${schema.children ? 'single-group' : ''}`" v-if="schema.children">
       <div :class="`symbol ${schema.symbol} single-group-head`">
         <Start v-if="schema.symbol == 'start'" />
@@ -41,6 +41,13 @@ const { remove, updateSchema } = useSymbols({ schema: schema.value });
         <Stop v-if="schema.symbol == 'stop'" />
         <Process v-if="schema.symbol == 'process'" />
         <Data v-if="schema.symbol == 'data'" />
+
+        <div class="options-menu">
+          <div class="menu-item">Process</div>
+          <div class="menu-item">IO</div>
+          <div class="menu-item">Data</div>
+          <div class="menu-item">Decision</div>
+        </div>
       </div>
     </template>
   </div>
