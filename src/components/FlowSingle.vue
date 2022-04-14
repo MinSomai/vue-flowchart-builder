@@ -3,10 +3,10 @@ import { toRefs } from "vue";
 
 import { useSymbols } from "@/composables/useSymbols";
 
-import Start from "@/svg/Start.vue";
-import Stop from "@/svg/Stop.vue";
-import Process from "@/svg/Process.vue";
-import Data from "@/svg/Data.vue";
+import Start from "@/components/symbols/Start.vue";
+import Stop from "@/components/symbols/Stop.vue";
+import Process from "@/components/symbols/Process.vue";
+import Data from "@/components/symbols/Data.vue";
 
 import FlowChildren from "@/components/FlowChildren.vue";
 
@@ -24,19 +24,47 @@ const { remove, updateSchema } = useSymbols({ schema: schema.value });
 </script>
 
 <template>
-  <div :class="`single ${schema.symbol}`" v-if="schema.symbol">
-    <div :class="`group-body ${schema.children ? 'single-group' : ''}`" v-if="schema.children">
-      <div :class="`symbol ${schema.symbol} single-group-head`">
-        <Start v-if="schema.symbol == 'start'" />
+  <div
+    class="single"
+    :class="{
+      [schema.symbol]: true,
+      'single-group-container': schema.children !== undefined,
+    }"
+  >
+    <!-- Single with one child, but composite behaviour ? -->
+    <div
+      class="group-body"
+      :class="{
+        'single-group': schema.children !== undefined,
+      }"
+      v-if="schema.children?.constructor.name == 'Object'"
+    >
+      <div
+        class="symbol single-group-head"
+        :class="{ [schema.symbol]: true }"
+        :id="schema.id"
+      >
         <Process v-if="schema.symbol == 'process'" />
         <Data v-if="schema.symbol == 'data'" />
       </div>
 
-      <FlowChildren :class="`depth-${depth}`" v-bind="$props" :schema="schema.children" />
+      <FlowChildren
+        :class="`depth-${depth}`"
+        v-bind="$props"
+        :schema="schema.children"
+      />
     </div>
 
+    <!-- Single/Leaf -->
     <template v-else>
-      <div :class="`symbol ${schema.symbol}`">
+      <div
+        class="symbol"
+        :class="{
+          [schema.symbol]: true,
+          'symbol-end': schema.isEnd,
+        }"
+        :id="schema.id"
+      >
         <Start v-if="schema.symbol == 'start'" />
         <Stop v-if="schema.symbol == 'stop'" />
         <Process v-if="schema.symbol == 'process'" />

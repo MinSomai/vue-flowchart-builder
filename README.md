@@ -4,7 +4,7 @@ Attempt to build flowchart builder, based on composite-pattern.
 
 Vue 3 in Vite.
 
-![Screenshot](screenshot.PNG)
+![Screenshot](screenshot.png)
 
 ## Recommended IDE Setup
 

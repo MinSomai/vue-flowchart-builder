@@ -23,13 +23,18 @@ onMounted(() => {
   }
 });
 
-const getComponent = (type) => {
+const getComponent = type => {
   return type === SYMBOLTYPES.GROUP ? flowGroup.value : flowSingle.value;
 };
 </script>
 <template>
-  <div :class="`group-children ${schema.children ? '' : 'single-group-body'}`">
-    <template v-if="schema.children">
+  <div
+    class="group-children"
+    :class="{
+      'single-group-body': schema.children?.constructor.name == 'Object',
+    }"
+  >
+    <template v-if="schema.children?.constructor.name == 'Array'">
       <component
         v-for="(child, index) in schema.children"
         :key="index"
@@ -46,7 +51,12 @@ const getComponent = (type) => {
     <div class="single-group-children" v-else>
       <!-- For case when single is used as a composite. -->
       <!-- But with only one child. Not composite, but different than single/leaf. -->
-      <FlowGroup :depth="depth" :index="0" :max-depth="maxDepth" v-model:schema="schema.schema" />
+      <FlowGroup
+        :depth="depth"
+        :index="0"
+        :max-depth="maxDepth"
+        :schema="schema.schema"
+      />
     </div>
   </div>
 </template>
