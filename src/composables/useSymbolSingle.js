@@ -1,17 +1,17 @@
 import { getCurrentInstance } from "vue";
 import deepClone from "@/helpers/deepClone";
 /*
- * useSymbols
+ * useSymbolSingle
  */
 
-export const useSymbols = ({ schema }) => {
+export const useSymbolSingle = ({ schema }) => {
   const { emit } = getCurrentInstance();
 
-  const remove = (index) => {
+  const remove = index => {
     emit("deletion-requested", index);
   };
 
-  const updateSchema = (value) => {
+  const updateSchema = value => {
     let updated_shema = deepClone(schema);
     updated_shema.value = value;
     emit("update:schema", updated_shema);

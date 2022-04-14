@@ -1,7 +1,7 @@
 <script setup>
 import { toRefs } from "vue";
 
-import { useSymbols } from "@/composables/useSymbols";
+import { useSymbolSingle } from "@/composables/useSymbolSingle";
 
 import Start from "@/components/symbols/Start.vue";
 import Stop from "@/components/symbols/Stop.vue";
@@ -20,7 +20,7 @@ const props = defineProps({
 const { schema } = toRefs(props);
 defineEmits(["deletion-requested", "update:schema"]);
 
-const { remove, updateSchema } = useSymbols({ schema: schema.value });
+const { remove, updateSchema } = useSymbolSingle({ schema: schema.value });
 </script>
 
 <template>
@@ -29,6 +29,7 @@ const { remove, updateSchema } = useSymbols({ schema: schema.value });
     :class="{
       [schema.symbol]: true,
       'single-group-container': schema.children !== undefined,
+      [`depth-${depth}`]: true,
     }"
   >
     <!-- Single with one child, but composite behaviour ? -->
