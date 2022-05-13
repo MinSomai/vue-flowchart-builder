@@ -4,10 +4,10 @@ import { reactive } from "vue";
  * useFlowchartBuilder
  */
 export const useFlowchartBuilder = () => {
-  const schema = reactive({
+  const newSchema = reactive({
     symbol: "container",
     id: "95933cc6-d9ec-4522-a10e-7e6180379506",
-    children: [
+    sibling: [
       {
         type: "single",
         schema: {
@@ -19,39 +19,127 @@ export const useFlowchartBuilder = () => {
         type: "single",
         schema: {
           symbol: "process",
-          id: "67765332-0b02-477e-b378-bb0b36ca6a35",
-          children: {
-            type: "group",
-            schema: {
-              symbol: "decision",
-              id: "a4038ea0-62bb-46a5-8396-7911cc6b433d",
-              children: [
-                {
-                  type: "single",
-                  schema: {
-                    symbol: "process",
-                    id: "67765332-0b02-477e-b378-bb0b36ca6a39",
-                    isEnd: true
+          id: "67765332-0b02-477e-b378-bb0b36ca6a35"
+        }
+      },
+      {
+        type: "group",
+        schema: {
+          symbol: "decision",
+          id: "a4038ea0-62bb-46a5-8396-7911cc6b433d",
+          children: [
+            {
+              type: "group-single",
+              schema: {
+                symbol: "container",
+                id: "12312312",
+                sibling: [
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "67765332-0b02-477e-b378-bb0b36ca6a39"
+                    }
+                  },
+                  {
+                    type: "group",
+                    schema: {
+                      symbol: "decision",
+                      id: "a4038ea0-62bb-46a5-8396-7911cc6b433d",
+                      children: [
+                        {
+                          type: "single",
+                          schema: {
+                            symbol: "process",
+                            id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                          }
+                        },
+                        {
+                          type: "single",
+                          schema: {
+                            symbol: "process",
+                            id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                    }
+                  },
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                    }
                   }
-                },
-                {
-                  type: "single",
-                  schema: {
-                    symbol: "process",
-                    id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
-                    isEnd: true
+                ]
+              }
+            },
+            {
+              type: "group-single",
+              schema: {
+                symbol: "container",
+                id: "12312312",
+                sibling: [
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "67765332-0b02-477e-b378-bb0b36ca6a39"
+                    }
+                  },
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                    }
+                  },
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                    }
+                  },
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                    }
+                  },
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                    }
+                  },
+                  {
+                    type: "single",
+                    schema: {
+                      symbol: "process",
+                      id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
+                    }
                   }
-                }
-              ]
+                ]
+              }
             }
-          }
+          ]
         }
       },
       {
         type: "single",
         schema: {
           symbol: "process",
-          id: "489dab47-d5e9-45f3-8ac3-09334ea14fc6"
+          id: "67765332-0b02-477e-b378-bb0b36ca6a35"
         }
       },
       {
@@ -65,6 +153,6 @@ export const useFlowchartBuilder = () => {
   });
 
   return {
-    schema
+    newSchema
   };
 };

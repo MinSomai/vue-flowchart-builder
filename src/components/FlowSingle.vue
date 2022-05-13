@@ -3,81 +3,54 @@ import { toRefs } from "vue";
 
 import { useSymbolSingle } from "@/composables/useSymbolSingle";
 
+import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
+
 import Start from "@/components/symbols/Start.vue";
 import Stop from "@/components/symbols/Stop.vue";
 import Process from "@/components/symbols/Process.vue";
 import Data from "@/components/symbols/Data.vue";
 
-import FlowChildren from "@/components/FlowChildren.vue";
-
 const props = defineProps({
   schema: Object,
   index: Number,
   depth: Number,
-  type: String,
+  type: String
 });
 
 const { schema } = toRefs(props);
 defineEmits(["deletion-requested", "update:schema"]);
 
 const { remove, updateSchema } = useSymbolSingle({ schema: schema.value });
+
+const getSymbol = type => {
+  switch (type) {
+    case SYMBOLTYPES.START:
+      return Start;
+    case SYMBOLTYPES.STOP:
+      return Stop;
+    case SYMBOLTYPES.PROCESS:
+      return Process;
+    case SYMBOLTYPES.DATA:
+      return Data;
+  }
+};
 </script>
 
 <template>
   <div
-    class="single"
+    class="single symbol"
     :class="{
       [schema.symbol]: true,
-      'single-group-container': schema.children !== undefined,
-      [`depth-${depth}`]: true,
+      [`depth-${depth}`]: true
     }"
   >
-    <!-- Single with one child, but composite behaviour ? -->
-    <div
-      class="group-body"
-      :class="{
-        'single-group': schema.children !== undefined,
-      }"
-      v-if="schema.children?.constructor.name == 'Object'"
-    >
-      <div
-        class="symbol single-group-head"
-        :class="{ [schema.symbol]: true }"
-        :id="schema.id"
-      >
-        <Process v-if="schema.symbol == 'process'" />
-        <Data v-if="schema.symbol == 'data'" />
-      </div>
+    <component :is="getSymbol(schema.symbol)" />
 
-      <FlowChildren
-        :class="`depth-${depth}`"
-        v-bind="$props"
-        :schema="schema.children"
-      />
+    <div class="options-menu" style="display: none">
+      <div class="menu-item">Process</div>
+      <div class="menu-item">IO</div>
+      <div class="menu-item">Data</div>
+      <div class="menu-item">Decision</div>
     </div>
-
-    <!-- Single/Leaf -->
-    <template v-else>
-      <div
-        class="symbol"
-        :class="{
-          [schema.symbol]: true,
-          'symbol-end': schema.isEnd,
-        }"
-        :id="schema.id"
-      >
-        <Start v-if="schema.symbol == 'start'" />
-        <Stop v-if="schema.symbol == 'stop'" />
-        <Process v-if="schema.symbol == 'process'" />
-        <Data v-if="schema.symbol == 'data'" />
-
-        <div class="options-menu">
-          <div class="menu-item">Process</div>
-          <div class="menu-item">IO</div>
-          <div class="menu-item">Data</div>
-          <div class="menu-item">Decision</div>
-        </div>
-      </div>
-    </template>
   </div>
 </template>

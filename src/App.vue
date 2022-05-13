@@ -4,7 +4,7 @@ import LeaderLine from "vue3-leaderline";
 
 import { useFlowchartBuilder } from "@/composables/useFlowchartBuilder";
 
-const { schema } = useFlowchartBuilder();
+const { newSchema, schema } = useFlowchartBuilder();
 console.log(LeaderLine);
 </script>
 
@@ -15,8 +15,8 @@ console.log(LeaderLine);
         :depth="0"
         :index="0"
         :max-depth="5"
-        v-model:schema="schema"
-        :id="schema.id"
+        v-model:schema="newSchema"
+        :id="newSchema.id"
       />
     </div>
   </main>
