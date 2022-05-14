@@ -20,7 +20,9 @@ const props = defineProps({
 const { schema } = toRefs(props);
 defineEmits(["deletion-requested", "update:schema"]);
 
-const { remove, updateSchema } = useSymbolSingle({ schema: schema.value });
+const { remove, updateSchema, addProcess } = useSymbolSingle({
+  schema: schema.value
+});
 
 const getSymbol = type => {
   switch (type) {
@@ -44,13 +46,20 @@ const getSymbol = type => {
       [`depth-${depth}`]: true
     }"
   >
-    <component :is="getSymbol(schema.symbol)" />
+    <div class="symbol">
+      <component :is="getSymbol(schema.symbol)" />
 
-    <div class="options-menu" style="display: none">
-      <div class="menu-item">Process</div>
-      <div class="menu-item">IO</div>
-      <div class="menu-item">Data</div>
-      <div class="menu-item">Decision</div>
+      <div class="options-menu">
+        <div
+          class="menu-item"
+          @click="addProcess({ schema, index, type, depth })"
+        >
+          Process
+        </div>
+        <div class="menu-item">IO</div>
+        <div class="menu-item">Data</div>
+        <div class="menu-item">Decision</div>
+      </div>
     </div>
   </div>
 </template>

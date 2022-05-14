@@ -17,8 +17,13 @@ export const useSymbolSingle = ({ schema }) => {
     emit("update:schema", updated_shema);
   };
 
+  const addProcess = ({ schema, index, type, depth }) => {
+    console.log("pp", schema, index, type, depth);
+  };
+
   return {
     remove,
     updateSchema,
+    addProcess
   };
 };

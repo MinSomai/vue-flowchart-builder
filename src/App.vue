@@ -10,7 +10,7 @@ console.log(LeaderLine);
 
 <template>
   <main>
-    <div class="vue-flowchart-builder">
+    <div class="vue-flowchart-builder debug-css">
       <FlowGroup
         :depth="0"
         :index="0"

@@ -76,15 +76,25 @@ const getSymbol = type => {
       }"
       :id="schema.id"
     >
-      <component :is="getSymbol(schema.symbol)" />
-      <div v-if="schema.symbol == 'container'">Vue Flowchart Builder</div>
+      <div class="symbol">
+        <component :is="getSymbol(schema.symbol)" />
+        <div v-if="schema.symbol == 'container'">Vue Flowchart Builder</div>
+
+        <div class="options-menu" v-if="depth > 0">
+          <div class="menu-item">Process</div>
+          <div class="menu-item">IO</div>
+          <div class="menu-item">Data</div>
+          <div class="menu-item">Decision</div>
+        </div>
+      </div>
     </div>
 
     <div
       :class="{
         'group-body': schema.sibling && !isGroupSingle,
         'group-single-body': schema.children && !isGroupSingle,
-        'group-single-body': isGroupSingle
+        'group-single-body': isGroupSingle,
+        'group-body': !isGroupSingle
       }"
     >
       <FlowSibling :class="`depth-${depth}`" v-bind="$props" :schema="schema" />

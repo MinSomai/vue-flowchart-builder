@@ -13,11 +13,16 @@ export const useSymbolGroup = ({ schema }) => {
 
   const addGroup = () => {};
 
-  const addSingle = () => {};
+  const addSingle = ({ schema }) => {
+    let single = {
+      type: "single"
+    };
+    console.log("group adding single: ", schema);
+  };
 
   return {
     remove,
     addGroup,
-    addSingle,
+    addSingle
   };
 };

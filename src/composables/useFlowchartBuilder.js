@@ -131,6 +131,13 @@ export const useFlowchartBuilder = () => {
                   }
                 ]
               }
+            },
+            {
+              type: "single",
+              schema: {
+                symbol: "process",
+                id: "67765332-0b02-477e-b378-bb0b36ca6a35"
+              }
             }
           ]
         }
