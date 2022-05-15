@@ -13,11 +13,9 @@ export const useSymbolGroup = ({ schema }) => {
 
   const addGroup = () => {};
 
-  const addSingle = ({ schema }) => {
-    let single = {
-      type: "single"
-    };
-    console.log("group adding single: ", schema);
+  const addSingle = ({ index, type, depth, symbolType }) => {
+    // console.log("group adding single: ", schema);
+    console.log("group: ", index, type, depth, symbolType);
   };
 
   return {

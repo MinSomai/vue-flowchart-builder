@@ -1,4 +1,5 @@
 import { getCurrentInstance } from "vue";
+import { v4 as uuidv4 } from "uuid";
 import deepClone from "@/helpers/deepClone";
 /*
  * useSymbolSingle
@@ -17,13 +18,22 @@ export const useSymbolSingle = ({ schema }) => {
     emit("update:schema", updated_shema);
   };
 
-  const addProcess = ({ schema, index, type, depth }) => {
-    console.log("pp", schema, index, type, depth);
+  const addSingle = ({ index, type, depth, symbolType }) => {
+    let updated_schema = deepClone(schema);
+    const single = {
+      type: "single",
+      schema: {
+        symbol: symbolType,
+        id: uuidv4()
+      }
+    };
+    // console.log("abc: ", updated_schema);
+    console.log("single: ", index, type, depth, symbolType);
   };
 
   return {
     remove,
     updateSchema,
-    addProcess
+    addSingle
   };
 };

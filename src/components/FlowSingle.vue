@@ -20,7 +20,7 @@ const props = defineProps({
 const { schema } = toRefs(props);
 defineEmits(["deletion-requested", "update:schema"]);
 
-const { remove, updateSchema, addProcess } = useSymbolSingle({
+const { remove, updateSchema, addSingle } = useSymbolSingle({
   schema: schema.value
 });
 
@@ -52,13 +52,32 @@ const getSymbol = type => {
       <div class="options-menu">
         <div
           class="menu-item"
-          @click="addProcess({ schema, index, type, depth })"
+          @click="
+            addSingle({ schema, index, type, depth, symbolType: 'process' })
+          "
         >
           Process
         </div>
-        <div class="menu-item">IO</div>
-        <div class="menu-item">Data</div>
-        <div class="menu-item">Decision</div>
+        <div
+          class="menu-item"
+          @click="addSingle({ schema, index, type, depth, symbolType: 'io' })"
+        >
+          IO
+        </div>
+        <div
+          class="menu-item"
+          @click="addSingle({ schema, index, type, depth, symbolType: 'data' })"
+        >
+          Data
+        </div>
+        <div
+          class="menu-item"
+          @click="
+            addSingle({ schema, index, type, depth, symbolType: 'decision' })
+          "
+        >
+          Decision
+        </div>
       </div>
     </div>
   </div>

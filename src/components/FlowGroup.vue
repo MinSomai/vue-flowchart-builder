@@ -34,6 +34,11 @@ const remove = () => {
   emit("child-deletion-requested", props.index);
 };
 
+const addProcess = ({ index, type, symbolType }) => {
+  // console.log("xyz: ", schema, index, type);
+  console.log("group: ", index, type, symbolType);
+};
+
 defineExpose({
   remove,
   FlowSingle,
@@ -81,10 +86,30 @@ const getSymbol = type => {
         <div v-if="schema.symbol == 'container'">Vue Flowchart Builder</div>
 
         <div class="options-menu" v-if="depth > 0">
-          <div class="menu-item">Process</div>
-          <div class="menu-item">IO</div>
-          <div class="menu-item">Data</div>
-          <div class="menu-item">Decision</div>
+          <div
+            class="menu-item"
+            @click="addProcess({ schema, index, type, symbolType: 'process' })"
+          >
+            Process
+          </div>
+          <div
+            class="menu-item"
+            @click="addProcess({ schema, index, type, symbolType: 'io' })"
+          >
+            IO
+          </div>
+          <div
+            class="menu-item"
+            @click="addProcess({ schema, index, type, symbolType: 'data' })"
+          >
+            Data
+          </div>
+          <div
+            class="menu-item"
+            @click="addProcess({ schema, index, type, symbolType: 'decision' })"
+          >
+            Decision
+          </div>
         </div>
       </div>
     </div>

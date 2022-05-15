@@ -6,11 +6,17 @@ import { useFlowchartBuilder } from "@/composables/useFlowchartBuilder";
 
 const { newSchema, schema } = useFlowchartBuilder();
 console.log(LeaderLine);
+const debug = false;
 </script>
 
 <template>
   <main>
-    <div class="vue-flowchart-builder debug-css">
+    <div
+      class="vue-flowchart-builder debug-css"
+      :class="{
+        'debug-css': debug
+      }"
+    >
       <FlowGroup
         :depth="0"
         :index="0"
