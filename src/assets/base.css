@@ -188,14 +188,14 @@ body {
 ***/
 .debug-css .group-children,
 .debug-css .group-sibling,
-.debug-css .group-single {
+.debug-css .group-sibling-container {
   padding: 15px;
 }
 
 /*
  * second composite container (hidden composite)
  */
-.debug-css .group-single {
+.debug-css .group-sibling-container {
   border: 3px dashed rgba(0, 0, 0, 0.5);
 }
 

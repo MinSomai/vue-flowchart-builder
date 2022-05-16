@@ -22,7 +22,7 @@ onMounted(() => {
 });
 
 const getComponent = type => {
-  if (type == SYMBOLTYPES.GROUP || type == SYMBOLTYPES.GROUPSINGLE)
+  if (type == SYMBOLTYPES.GROUP || type == SYMBOLTYPES.GROUPSIBLINGCONTAINER)
     return flowGroup.value;
   if (type == SYMBOLTYPES.SINGLE) return flowSingle.value;
 };
@@ -41,15 +41,17 @@ const getSiblingsOrChildrens = schema => {
   >
     <component
       v-for="(child, index) in getSiblingsOrChildrens(schema)"
-      :key="index"
+      :key="child.id"
       :is="getComponent(child.type)"
       :type="child.type"
       v-model:schema="child.schema"
       :index="index"
       :max-depth="maxDepth"
       :depth="depth + 1"
-      :is-group-single="child.type === SYMBOLTYPES.GROUPSINGLE ? true : false"
-      @child-deletion-requested="$parent.removeChild"
+      :is-group-sibling-container="
+        child.type === SYMBOLTYPES.GROUPSIBLINGCONTAINER ? true : false
+      "
+      @add-sibling="params => $parent.addSibling(params)"
     />
   </div>
 </template>

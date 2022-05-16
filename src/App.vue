@@ -4,15 +4,15 @@ import LeaderLine from "vue3-leaderline";
 
 import { useFlowchartBuilder } from "@/composables/useFlowchartBuilder";
 
-const { newSchema, schema } = useFlowchartBuilder();
+const { newSchema } = useFlowchartBuilder();
 console.log(LeaderLine);
-const debug = false;
+const debug = true;
 </script>
 
 <template>
   <main>
     <div
-      class="vue-flowchart-builder debug-css"
+      class="vue-flowchart-builder"
       :class="{
         'debug-css': debug
       }"
@@ -21,7 +21,7 @@ const debug = false;
         :depth="0"
         :index="0"
         :max-depth="5"
-        v-model:schema="newSchema"
+        v-model:schema="newSchema.mySchema"
         :id="newSchema.id"
       />
     </div>

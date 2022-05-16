@@ -1,7 +1,10 @@
 <script setup>
-import { markRaw } from "vue";
+import { markRaw, toRefs } from "vue";
+import { v4 as uuidv4 } from "uuid";
 
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
+
+import deepClone from "@/helpers/deepClone";
 
 import Decision from "@/components/symbols/Decision.vue";
 import Process from "@/components/symbols/Process.vue";
@@ -10,8 +13,6 @@ import Data from "@/components/symbols/Data.vue";
 import FlowSingle from "@/components/FlowSingle.vue";
 import FlowGroup from "@/components/FlowGroup.vue";
 import FlowSibling from "@/components/FlowSibling.vue";
-
-const emit = defineEmits(["child-deletion-requested"]);
 
 const props = defineProps({
   type: {
@@ -22,25 +23,50 @@ const props = defineProps({
   index: Number,
   depth: Number,
   maxDepth: Number,
-  isGroupSingle: Boolean
+  isGroupSiblingContainer: Boolean
 });
+
+const emit = defineEmits(["update:schema"]);
+
+const { schema, isGroupSiblingContainer, index } = toRefs(props);
+
+const addSibling = ({ singleSchema, options }) => {
+  //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
+  if (
+    !isGroupSiblingContainer.value &&
+    schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER
+  ) {
+    console.info("TODO: edge case");
+    console.log(schema.value);
+    return;
+  }
+  // otherwise
+  let updated_schema = deepClone(schema.value);
+  updated_schema.sibling.splice(options.index + 1, 0, singleSchema);
+  emit("update:schema", updated_schema);
+};
+
+const addChildren = ({ symbolType }) => {
+  const single = {
+    type: "single",
+    schema: {
+      symbol: symbolType,
+      id: uuidv4()
+    }
+  };
+
+  let updated_schema = deepClone(schema.value);
+  updated_schema.children.splice(index.value + 1, 0, single);
+  emit("update:schema", updated_schema);
+};
 
 markRaw({
   FlowSingle,
   FlowGroup
 });
 
-const remove = () => {
-  emit("child-deletion-requested", props.index);
-};
-
-const addProcess = ({ index, type, symbolType }) => {
-  // console.log("xyz: ", schema, index, type);
-  console.log("group: ", index, type, symbolType);
-};
-
 defineExpose({
-  remove,
+  addSibling,
   FlowSingle,
   FlowGroup
 });
@@ -63,50 +89,47 @@ const getSymbol = type => {
 <template>
   <div
     :class="{
-      group: !isGroupSingle,
-      'single group-single': isGroupSingle,
+      group: !isGroupSiblingContainer,
+      'single group-sibling-container': isGroupSiblingContainer,
       [`depth-${depth}`]: true
     }"
   >
     <!-- Head for 'decision' -->
     <div
-      v-if="!isGroupSingle"
+      v-if="!isGroupSiblingContainer"
       class="group-head"
       :class="{
         [schema.symbol]: true,
         symbol: depth > 0,
         [`depth-${depth}`]: true,
         'group-head': schema.sibling,
-        'group-single-head': schema.children
+        'group-sibling-container-head': schema.children
       }"
       :id="schema.id"
     >
       <div class="symbol">
         <component :is="getSymbol(schema.symbol)" />
-        <div v-if="schema.symbol == 'container'">Vue Flowchart Builder</div>
+
+        <div v-if="schema.symbol == 'main-container'">
+          Vue Flowchart Builder
+        </div>
 
         <div class="options-menu" v-if="depth > 0">
           <div
             class="menu-item"
-            @click="addProcess({ schema, index, type, symbolType: 'process' })"
+            @click="addChildren({ symbolType: 'process' })"
           >
             Process
           </div>
-          <div
-            class="menu-item"
-            @click="addProcess({ schema, index, type, symbolType: 'io' })"
-          >
+          <div class="menu-item" @click="addChildren({ symbolType: 'io' })">
             IO
           </div>
-          <div
-            class="menu-item"
-            @click="addProcess({ schema, index, type, symbolType: 'data' })"
-          >
+          <div class="menu-item" @click="addChildren({ symbolType: 'data' })">
             Data
           </div>
           <div
             class="menu-item"
-            @click="addProcess({ schema, index, type, symbolType: 'decision' })"
+            @click="addChildren({ symbolType: 'decision' })"
           >
             Decision
           </div>
@@ -116,10 +139,11 @@ const getSymbol = type => {
 
     <div
       :class="{
-        'group-body': schema.sibling && !isGroupSingle,
-        'group-single-body': schema.children && !isGroupSingle,
-        'group-single-body': isGroupSingle,
-        'group-body': !isGroupSingle
+        'group-body': schema.sibling && !isGroupSiblingContainer,
+        'group-sibling-container-body':
+          schema.children && !isGroupSiblingContainer,
+        'group-sibling-container-body': isGroupSiblingContainer,
+        'group-body': !isGroupSiblingContainer
       }"
     >
       <FlowSibling :class="`depth-${depth}`" v-bind="$props" :schema="schema" />

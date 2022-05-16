@@ -1,7 +1,5 @@
 <script setup>
-import { toRefs } from "vue";
-
-import { useSymbolSingle } from "@/composables/useSymbolSingle";
+import { v4 as uuidv4 } from "uuid";
 
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
 
@@ -17,12 +15,26 @@ const props = defineProps({
   type: String
 });
 
-const { schema } = toRefs(props);
-defineEmits(["deletion-requested", "update:schema"]);
+const emit = defineEmits(["add-sibling"]);
 
-const { remove, updateSchema, addSingle } = useSymbolSingle({
-  schema: schema.value
-});
+const addSibling = ({ symbolType }) => {
+  const options = {
+    schema: props.schema,
+    index: props.index,
+    type: props.type,
+    depth: props.depth
+  };
+
+  const single = {
+    type: "single",
+    schema: {
+      symbol: symbolType,
+      id: uuidv4()
+    }
+  };
+
+  emit("add-sibling", { singleSchema: single, options });
+};
 
 const getSymbol = type => {
   switch (type) {
@@ -50,32 +62,16 @@ const getSymbol = type => {
       <component :is="getSymbol(schema.symbol)" />
 
       <div class="options-menu">
-        <div
-          class="menu-item"
-          @click="
-            addSingle({ schema, index, type, depth, symbolType: 'process' })
-          "
-        >
+        <div class="menu-item" @click="addSibling({ symbolType: 'process' })">
           Process
         </div>
-        <div
-          class="menu-item"
-          @click="addSingle({ schema, index, type, depth, symbolType: 'io' })"
-        >
+        <div class="menu-item" @click="addSibling({ symbolType: 'io' })">
           IO
         </div>
-        <div
-          class="menu-item"
-          @click="addSingle({ schema, index, type, depth, symbolType: 'data' })"
-        >
+        <div class="menu-item" @click="addSibling({ symbolType: 'data' })">
           Data
         </div>
-        <div
-          class="menu-item"
-          @click="
-            addSingle({ schema, index, type, depth, symbolType: 'decision' })
-          "
-        >
+        <div class="menu-item" @click="addSibling({ symbolType: 'decision' })">
           Decision
         </div>
       </div>

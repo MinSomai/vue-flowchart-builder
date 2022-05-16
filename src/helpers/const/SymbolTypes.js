@@ -8,8 +8,9 @@ export const SYMBOLTYPES = Object.freeze({
   PROCESS: "process",
 
   GROUP: "group",
-  GROUPSINGLE: "group-single",
-  SINGLE: "single"
+  SINGLE: "single",
+  GROUPSIBLINGCONTAINER: "group-sibling-container",
+  SIBLINGCONTAINER: "sibling-container"
 });
 
 export const COMPOSITETYPES = Object.freeze({
