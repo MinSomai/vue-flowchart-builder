@@ -51,7 +51,8 @@ const getSiblingsOrChildrens = schema => {
       :is-group-sibling-container="
         child.type === SYMBOLTYPES.GROUPSIBLINGCONTAINER ? true : false
       "
-      @add-sibling="params => $parent.addSibling(params)"
+      @add-sibling="$parent.addSibling"
+      @remove-sibling="$parent.removeSibling"
     />
   </div>
 </template>

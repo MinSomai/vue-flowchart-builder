@@ -19,6 +19,13 @@ export const useFlowchartBuilder = () => {
         {
           type: "single",
           schema: {
+            symbol: "io",
+            id: "483793f6-f589-47cb-97a7-23f607122ba5"
+          }
+        },
+        {
+          type: "single",
+          schema: {
             symbol: "process",
             id: "67765332-0b02-477e-b378-bb0b36ca6a35"
           }
@@ -98,7 +105,7 @@ export const useFlowchartBuilder = () => {
                     {
                       type: "single",
                       schema: {
-                        symbol: "process",
+                        symbol: "data",
                         id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
                       }
                     },

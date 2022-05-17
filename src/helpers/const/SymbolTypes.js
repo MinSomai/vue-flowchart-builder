@@ -6,6 +6,7 @@ export const SYMBOLTYPES = Object.freeze({
   STOP: "stop",
   IO: "io",
   PROCESS: "process",
+  DATA: "data",
 
   GROUP: "group",
   SINGLE: "single",

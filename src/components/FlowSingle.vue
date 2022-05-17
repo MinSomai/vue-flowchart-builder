@@ -7,6 +7,8 @@ import Start from "@/components/symbols/Start.vue";
 import Stop from "@/components/symbols/Stop.vue";
 import Process from "@/components/symbols/Process.vue";
 import Data from "@/components/symbols/Data.vue";
+import IO from "@/components/symbols/IO.vue";
+import Cross from "@/assets/svg/Cross.vue";
 
 const props = defineProps({
   schema: Object,
@@ -15,7 +17,7 @@ const props = defineProps({
   type: String
 });
 
-const emit = defineEmits(["add-sibling"]);
+const emit = defineEmits(["add-sibling", "remove-sibling", "add-decision"]);
 
 const addSibling = ({ symbolType }) => {
   const options = {
@@ -33,7 +35,17 @@ const addSibling = ({ symbolType }) => {
     }
   };
 
+  if (symbolType == SYMBOLTYPES.DECISION) {
+    emit("add-decision", { singleSchema: single, options });
+    return;
+  }
   emit("add-sibling", { singleSchema: single, options });
+};
+
+const removeSibling = ({ symbolType }) => {
+  if (symbolType == SYMBOLTYPES.START || symbolType === SYMBOLTYPES.STOP)
+    return;
+  emit("remove-sibling", props.index);
 };
 
 const getSymbol = type => {
@@ -44,6 +56,8 @@ const getSymbol = type => {
       return Stop;
     case SYMBOLTYPES.PROCESS:
       return Process;
+    case SYMBOLTYPES.IO:
+      return IO;
     case SYMBOLTYPES.DATA:
       return Data;
   }
@@ -61,7 +75,10 @@ const getSymbol = type => {
     <div class="symbol">
       <component :is="getSymbol(schema.symbol)" />
 
-      <div class="options-menu">
+      <div class="symbol-actions">
+        <Cross @click="removeSibling({ symbolType: schema.symbol })" />
+      </div>
+      <div class="options-menu" v-show="schema.symbol !== SYMBOLTYPES.STOP">
         <div class="menu-item" @click="addSibling({ symbolType: 'process' })">
           Process
         </div>

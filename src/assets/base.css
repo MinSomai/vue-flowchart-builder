@@ -175,6 +175,23 @@ body {
   cursor: pointer;
 }
 
+.single > .symbol .symbol-actions {
+  position: absolute;
+  top: -45px;
+  right: -30px;
+  padding-top: 25px;
+  padding-left: 30px;
+  padding-bottom: 25px;
+  visibility: hidden;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.single > .symbol:hover .symbol-actions {
+  visibility: visible;
+  opacity: 1;
+}
+
 .single .group-body {
   display: flex;
   flex-direction: column;

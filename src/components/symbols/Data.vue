@@ -1,20 +1,24 @@
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    style="background-color: rgb(255, 255, 255)"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     version="1.1"
     width="102px"
     height="62px"
     viewBox="-0.5 -0.5 102 62"
-    content='&lt;mxfile host="Chrome" modified="2022-04-04T19:45:16.363Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36" etag="_T22tfzxaB5HDuURaoTX" version="16.2.2" type="device" pages="2"&gt;&lt;diagram id="EKtKKHo3ZdTH-zuWGdtb" name="Page-1"&gt;jZPBboMwDIafhmMnIIJu13bdJm3VKnHYOSIuiRoIMqHQPf3CYqCsqrQLcj47tuPfBGxb9q/Ia7k3AnQQh6IP2HMQxymL3XcAFw8SlnhQoBIeRTPI1DcQDIm2SkCzCLTGaKvqJcxNVUFuF4wjmm4ZdjR6WbXmBdyALOf6ln4pYaWnj0k48zdQhRwrRyF5Sj4GE2gkF6a7QmwXsC0aY71V9lvQw+zGufh7L3e8U2MIlf3PhXZ1bNeH/WGt1fkjS9On98/TirKcuW7pwdSsvYwTcH3Xg+kqca1BmwJ5GbCNtKV2OHJmY9Gcpvm4l21qQFWCBfx78TA7Np1UFrKa50P6zq2PY2jaSoCgxBxzWoloyNp4O3yImTtR64AW+rsziaZJuw0F40rjxYWMFxiJQ9s5idXNWk+KyiudU2Kc1quYUs8KOINEGI+z2L++qz+G7X4A&lt;/diagram&gt;&lt;diagram id="sH9pLrft0GiItcGhdZMm" name="Page-2"&gt;ldG9DsIgEADgp2E0aUtNdLXWn/g3NNHEDcvZEmmvIsbWp7cGtBIXnTg+joMDQqOinipW5SvkIEng8ZrQMQkC3/cG7fCUxkg/DA1kSnCb1EEi7mDRs3oVHC5OokaUWlQupliWkGrHmFJ4c9OOKN1TK5bBFyQpk9+6E1znRgd9r/MZiCzX74btSsFeyRYuOeN4+yAaExopRG2ioo5APh/v9S4gh0tx2k1G6wM2m+15Mff3PVNs8s+WdwsKSv1r6TbortZOnA+m8QM=&lt;/diagram&gt;&lt;/mxfile&gt;'
+    content='&lt;mxfile host="app.diagrams.net" modified="2022-05-17T17:01:56.919Z" agent="5.0 (X11)" etag="sr2Io9c261tMD2O0YqbX" version="18.0.6" type="device"&gt;&lt;diagram id="rOp3mAIZWOGny02w2q7r" name="Page-1"&gt;jZJNb4MwDIZ/DcdVQMba89ruQ9qkST3sOLnEJdkCiYI7aH/9wjBQNFWalIPz5E0cv3Yk1mX76MGpVyvRRGks20hsojRNbtM06lYsTz1ZZlkPCq8liyaw02dkGDM9aon1TEjWGtJuDnNbVZjTjIH3tpnLDtbMszoo8A/Y5WD+0nctSfV0lcUTf0JdqCFzEvNJCYOYQa1A2uYCiW0k1t5a6qOyXaPpzBt86e89XDkdP+axov9cqM9OvyTPWQWfbrXfvOX7dHMj+le+wRy5YP4snQYHavL2ayw+fPteUWlCmIQwFOU6XdkWXf8XB2ObXIGnRU3Wo/yQQBB0jdKEOwd5J26CNDBOjZ6wvVpTMjoVRgxtieRPQcIXxJLN5ekSd7xvpl6NHVEXfRp0wONRjE9PDoaATRy2U7N+zy5GXmx/AA==&lt;/diagram&gt;&lt;/mxfile&gt;'
   >
-    <path
-      d="M 39.5 61 L 7 61 Q 1 61 3.15 55.4 L 21.85 6.6 Q 24 1 30 1 L 95 1 Q 101 1 98.85 6.6 L 80.15 55.4 Q 78 61 72 61 Z"
-      fill="rgb(255, 255, 255)"
-      stroke="rgb(0, 0, 0)"
-      stroke-width="2"
-      stroke-miterlimit="10"
-      pointer-events="none"
-    />
+    <defs />
+    <g>
+      <path
+        d="M 11.36 1 L 100.47 1 C 101 1.57 101 2.43 100.47 3 C 96.47 7.46 93.83 18.59 93.83 31 C 93.83 43.41 96.47 54.54 100.47 59 C 101 59.57 101 60.43 100.47 61 L 11.36 61 C 5.64 61 1 47.57 1 31 C 1 14.43 5.64 1 11.36 1 Z"
+        fill="rgb(255, 255, 255)"
+        stroke="rgb(0, 0, 0)"
+        stroke-width="2"
+        stroke-miterlimit="10"
+        pointer-events="all"
+      />
+    </g>
   </svg>
 </template>

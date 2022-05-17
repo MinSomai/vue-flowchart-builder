@@ -46,7 +46,25 @@ const addSibling = ({ singleSchema, options }) => {
   emit("update:schema", updated_schema);
 };
 
+const removeSibling = index => {
+  //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
+  if (
+    !isGroupSiblingContainer.value &&
+    schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER
+  ) {
+    console.info("TODO: edge case");
+    console.log(schema.value);
+    return;
+  }
+  let updated_schema = deepClone(schema.value);
+  updated_schema.sibling.splice(index, 1);
+  emit("update:schema", updated_schema);
+};
+
 const addChildren = ({ symbolType }) => {
+  if (symbolType == SYMBOLTYPES.DECISION) {
+    return;
+  }
   const single = {
     type: "single",
     schema: {
@@ -67,6 +85,7 @@ markRaw({
 
 defineExpose({
   addSibling,
+  removeSibling,
   FlowSingle,
   FlowGroup
 });

@@ -25,6 +25,7 @@ const debug = true;
         :id="newSchema.id"
       />
     </div>
+    <pre>{{ newSchema.mySchema }}</pre>
   </main>
 </template>
 
