@@ -1,4 +1,5 @@
 <script setup>
+import { toRefs, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
@@ -18,6 +19,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["add-sibling", "remove-sibling", "add-decision"]);
+
+const { schema } = toRefs(props);
 
 const addSibling = ({ symbolType }) => {
   const options = {
@@ -62,6 +65,11 @@ const getSymbol = type => {
       return Data;
   }
 };
+
+const showActions = computed(() => {
+  const hide = [SYMBOLTYPES.STOP, SYMBOLTYPES.START];
+  return !hide.includes(schema.value.symbol);
+});
 </script>
 
 <template>
@@ -75,7 +83,7 @@ const getSymbol = type => {
     <div class="symbol">
       <component :is="getSymbol(schema.symbol)" />
 
-      <div class="symbol-actions">
+      <div class="symbol-actions" v-if="showActions">
         <Cross @click="removeSibling({ symbolType: schema.symbol })" />
       </div>
       <div class="options-menu" v-show="schema.symbol !== SYMBOLTYPES.STOP">

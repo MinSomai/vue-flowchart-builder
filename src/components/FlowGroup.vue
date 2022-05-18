@@ -26,7 +26,7 @@ const props = defineProps({
   isGroupSiblingContainer: Boolean
 });
 
-const emit = defineEmits(["update:schema"]);
+const emit = defineEmits(["update:schema", "remove-group"]);
 
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
 
@@ -46,18 +46,30 @@ const addSibling = ({ singleSchema, options }) => {
   emit("update:schema", updated_schema);
 };
 
-const removeSibling = index => {
+const removeSibling = itemIndex => {
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
+  // removing children
   if (
     !isGroupSiblingContainer.value &&
     schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER
   ) {
-    console.info("TODO: edge case");
-    console.log(schema.value);
+    let updated_schema = deepClone(schema.value);
+
+    if (updated_schema.children.length === 1) {
+      console.info("TODO: edge case when removing the last children"); // maybe unnecessary
+    }
+    updated_schema.children.splice(itemIndex, 1);
+    emit("update:schema", updated_schema);
     return;
   }
+
+  // removing sibling
   let updated_schema = deepClone(schema.value);
-  updated_schema.sibling.splice(index, 1);
+  if (updated_schema.sibling.length === 1) {
+    console.info("TODO: edge case when removing the last sibling");
+    emit("remove-group", index.value);
+  }
+  updated_schema.sibling.splice(itemIndex, 1);
   emit("update:schema", updated_schema);
 };
 

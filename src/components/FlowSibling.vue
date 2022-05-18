@@ -27,6 +27,8 @@ const getComponent = type => {
   if (type == SYMBOLTYPES.SINGLE) return flowSingle.value;
 };
 
+// const emit = defineEmits(["update:schema"]);
+
 const getSiblingsOrChildrens = schema => {
   if (schema.children) return schema.children;
   if (schema.sibling) return schema.sibling;
