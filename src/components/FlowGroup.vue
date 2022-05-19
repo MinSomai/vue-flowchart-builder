@@ -9,6 +9,7 @@ import deepClone from "@/helpers/deepClone";
 import Decision from "@/components/symbols/Decision.vue";
 import Process from "@/components/symbols/Process.vue";
 import Data from "@/components/symbols/Data.vue";
+import Cross from "@/assets/svg/Cross.vue";
 
 import FlowSingle from "@/components/FlowSingle.vue";
 import FlowGroup from "@/components/FlowGroup.vue";
@@ -17,25 +18,22 @@ import FlowSibling from "@/components/FlowSibling.vue";
 const props = defineProps({
   type: {
     type: String,
-    default: "group"
+    default: "group",
   },
   schema: Object,
   index: Number,
   depth: Number,
   maxDepth: Number,
-  isGroupSiblingContainer: Boolean
+  isGroupSiblingContainer: Boolean,
 });
 
-const emit = defineEmits(["update:schema", "remove-group"]);
+const emit = defineEmits(["update:schema", "remove-sibling-group", "remove-children-group"]);
 
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
 
 const addSibling = ({ singleSchema, options }) => {
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
-  if (
-    !isGroupSiblingContainer.value &&
-    schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER
-  ) {
+  if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
     console.info("TODO: edge case");
     console.log(schema.value);
     return;
@@ -46,17 +44,15 @@ const addSibling = ({ singleSchema, options }) => {
   emit("update:schema", updated_schema);
 };
 
-const removeSibling = itemIndex => {
+const removeSibling = (itemIndex) => {
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
   // removing children
-  if (
-    !isGroupSiblingContainer.value &&
-    schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER
-  ) {
+  if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
     let updated_schema = deepClone(schema.value);
 
     if (updated_schema.children.length === 1) {
-      console.info("TODO: edge case when removing the last children"); // maybe unnecessary
+      // edge case when removing the last children"); // maybe unnecessary
+      emit("remove-children-group", index.value);
     }
     updated_schema.children.splice(itemIndex, 1);
     emit("update:schema", updated_schema);
@@ -66,8 +62,8 @@ const removeSibling = itemIndex => {
   // removing sibling
   let updated_schema = deepClone(schema.value);
   if (updated_schema.sibling.length === 1) {
-    console.info("TODO: edge case when removing the last sibling");
-    emit("remove-group", index.value);
+    // edge case when removing the last sibling");
+    emit("remove-sibling-group", index.value);
   }
   updated_schema.sibling.splice(itemIndex, 1);
   emit("update:schema", updated_schema);
@@ -81,8 +77,8 @@ const addChildren = ({ symbolType }) => {
     type: "single",
     schema: {
       symbol: symbolType,
-      id: uuidv4()
-    }
+      id: uuidv4(),
+    },
   };
 
   let updated_schema = deepClone(schema.value);
@@ -92,17 +88,38 @@ const addChildren = ({ symbolType }) => {
 
 markRaw({
   FlowSingle,
-  FlowGroup
+  FlowGroup,
 });
+
+// remove hidden composite
+const removeSiblingGroup = (itemIndex) => {
+  let updated_schema = deepClone(schema.value);
+  updated_schema.children.splice(itemIndex, 1);
+  emit("update:schema", updated_schema);
+};
+
+// remove normal group/composite
+const removeChildrenGroup = (itemIndex) => {
+  let updated_schema = deepClone(schema.value);
+  updated_schema.sibling.splice(itemIndex, 1);
+  emit("update:schema", updated_schema);
+};
+
+// delegates the deletion to parent
+const removeChildrenGroupLocal = (itemIndex) => {
+  emit("remove-children-group", itemIndex);
+};
 
 defineExpose({
   addSibling,
   removeSibling,
+  removeSiblingGroup,
+  removeChildrenGroup,
   FlowSingle,
-  FlowGroup
+  FlowGroup,
 });
 
-const getSymbol = type => {
+const getSymbol = (type) => {
   switch (type) {
     case SYMBOLTYPES.DECISION:
       return Decision;
@@ -122,7 +139,7 @@ const getSymbol = type => {
     :class="{
       group: !isGroupSiblingContainer,
       'single group-sibling-container': isGroupSiblingContainer,
-      [`depth-${depth}`]: true
+      [`depth-${depth}`]: true,
     }"
   >
     <!-- Head for 'decision' -->
@@ -134,47 +151,35 @@ const getSymbol = type => {
         symbol: depth > 0,
         [`depth-${depth}`]: true,
         'group-head': schema.sibling,
-        'group-sibling-container-head': schema.children
+        'group-sibling-container-head': schema.children,
       }"
       :id="schema.id"
     >
       <div class="symbol">
         <component :is="getSymbol(schema.symbol)" />
 
-        <div v-if="schema.symbol == 'main-container'">
-          Vue Flowchart Builder
+        <div class="symbol-actions">
+          <Cross @click="removeChildrenGroupLocal(index)" />
         </div>
 
+        <div v-if="schema.symbol == 'main-container'">Vue Flowchart Builder</div>
+
         <div class="options-menu" v-if="depth > 0">
-          <div
-            class="menu-item"
-            @click="addChildren({ symbolType: 'process' })"
-          >
-            Process
-          </div>
-          <div class="menu-item" @click="addChildren({ symbolType: 'io' })">
-            IO
-          </div>
-          <div class="menu-item" @click="addChildren({ symbolType: 'data' })">
-            Data
-          </div>
-          <div
-            class="menu-item"
-            @click="addChildren({ symbolType: 'decision' })"
-          >
-            Decision
-          </div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'process' })">Process</div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'io' })">IO</div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'data' })">Data</div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'decision' })">Decision</div>
         </div>
       </div>
     </div>
 
     <div
+      v-if="(schema.children && schema.children.length > 0) || (schema.sibling && schema.sibling.length > 0)"
       :class="{
         'group-body': schema.sibling && !isGroupSiblingContainer,
-        'group-sibling-container-body':
-          schema.children && !isGroupSiblingContainer,
+        'group-sibling-container-body': schema.children && !isGroupSiblingContainer,
         'group-sibling-container-body': isGroupSiblingContainer,
-        'group-body': !isGroupSiblingContainer
+        'group-body': !isGroupSiblingContainer,
       }"
     >
       <FlowSibling :class="`depth-${depth}`" v-bind="$props" :schema="schema" />

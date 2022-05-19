@@ -15,7 +15,7 @@ const props = defineProps({
   schema: Object,
   index: Number,
   depth: Number,
-  type: String
+  type: String,
 });
 
 const emit = defineEmits(["add-sibling", "remove-sibling", "add-decision"]);
@@ -27,15 +27,15 @@ const addSibling = ({ symbolType }) => {
     schema: props.schema,
     index: props.index,
     type: props.type,
-    depth: props.depth
+    depth: props.depth,
   };
 
   const single = {
     type: "single",
     schema: {
       symbol: symbolType,
-      id: uuidv4()
-    }
+      id: uuidv4(),
+    },
   };
 
   if (symbolType == SYMBOLTYPES.DECISION) {
@@ -46,12 +46,11 @@ const addSibling = ({ symbolType }) => {
 };
 
 const removeSibling = ({ symbolType }) => {
-  if (symbolType == SYMBOLTYPES.START || symbolType === SYMBOLTYPES.STOP)
-    return;
+  if (symbolType == SYMBOLTYPES.START || symbolType === SYMBOLTYPES.STOP) return;
   emit("remove-sibling", props.index);
 };
 
-const getSymbol = type => {
+const getSymbol = (type) => {
   switch (type) {
     case SYMBOLTYPES.START:
       return Start;
@@ -77,7 +76,7 @@ const showActions = computed(() => {
     class="single symbol"
     :class="{
       [schema.symbol]: true,
-      [`depth-${depth}`]: true
+      [`depth-${depth}`]: true,
     }"
   >
     <div class="symbol">
@@ -87,18 +86,10 @@ const showActions = computed(() => {
         <Cross @click="removeSibling({ symbolType: schema.symbol })" />
       </div>
       <div class="options-menu" v-show="schema.symbol !== SYMBOLTYPES.STOP">
-        <div class="menu-item" @click="addSibling({ symbolType: 'process' })">
-          Process
-        </div>
-        <div class="menu-item" @click="addSibling({ symbolType: 'io' })">
-          IO
-        </div>
-        <div class="menu-item" @click="addSibling({ symbolType: 'data' })">
-          Data
-        </div>
-        <div class="menu-item" @click="addSibling({ symbolType: 'decision' })">
-          Decision
-        </div>
+        <div class="menu-item" @click="addSibling({ symbolType: 'process' })">Process</div>
+        <div class="menu-item" @click="addSibling({ symbolType: 'io' })">IO</div>
+        <div class="menu-item" @click="addSibling({ symbolType: 'data' })">Data</div>
+        <div class="menu-item" @click="addSibling({ symbolType: 'decision' })">Decision</div>
       </div>
     </div>
   </div>

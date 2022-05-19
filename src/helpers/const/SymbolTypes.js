@@ -11,10 +11,10 @@ export const SYMBOLTYPES = Object.freeze({
   GROUP: "group",
   SINGLE: "single",
   GROUPSIBLINGCONTAINER: "group-sibling-container",
-  SIBLINGCONTAINER: "sibling-container"
+  SIBLINGCONTAINER: "sibling-container",
 });
 
 export const COMPOSITETYPES = Object.freeze({
   GROUP: "group",
-  SINGLE: "single"
+  SINGLE: "single",
 });

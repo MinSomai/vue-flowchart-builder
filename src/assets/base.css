@@ -175,7 +175,8 @@ body {
   cursor: pointer;
 }
 
-.single > .symbol .symbol-actions {
+.single > .symbol .symbol-actions,
+.group-head > .symbol .symbol-actions {
   position: absolute;
   top: -45px;
   right: -30px;
@@ -187,7 +188,8 @@ body {
   cursor: pointer;
 }
 
-.single > .symbol:hover .symbol-actions {
+.single > .symbol:hover .symbol-actions,
+.group-head > .symbol:hover .symbol-actions {
   visibility: visible;
   opacity: 1;
 }

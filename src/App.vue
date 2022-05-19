@@ -14,16 +14,10 @@ const debug = true;
     <div
       class="vue-flowchart-builder"
       :class="{
-        'debug-css': debug
+        'debug-css': debug,
       }"
     >
-      <FlowGroup
-        :depth="0"
-        :index="0"
-        :max-depth="5"
-        v-model:schema="newSchema.mySchema"
-        :id="newSchema.id"
-      />
+      <FlowGroup :depth="0" :index="0" :max-depth="5" v-model:schema="newSchema.mySchema" :id="newSchema.id" />
     </div>
     <pre>{{ newSchema.mySchema }}</pre>
   </main>

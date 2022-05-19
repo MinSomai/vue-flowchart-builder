@@ -13,22 +13,22 @@ export const useFlowchartBuilder = () => {
           type: "single",
           schema: {
             symbol: "start",
-            id: "5df7e663-09c5-4af5-bdcc-bd0e38548f04"
-          }
+            id: "5df7e663-09c5-4af5-bdcc-bd0e38548f04",
+          },
         },
         {
           type: "single",
           schema: {
             symbol: "io",
-            id: "483793f6-f589-47cb-97a7-23f607122ba5"
-          }
+            id: "483793f6-f589-47cb-97a7-23f607122ba5",
+          },
         },
         {
           type: "single",
           schema: {
             symbol: "process",
-            id: "67765332-0b02-477e-b378-bb0b36ca6a35"
-          }
+            id: "67765332-0b02-477e-b378-bb0b36ca6a35",
+          },
         },
         {
           type: "group",
@@ -46,8 +46,8 @@ export const useFlowchartBuilder = () => {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "67765332-0b02-477e-b378-bb0b36ca6a39"
-                      }
+                        id: "67765332-0b02-477e-b378-bb0b36ca6a39",
+                      },
                     },
                     {
                       type: "group",
@@ -59,35 +59,35 @@ export const useFlowchartBuilder = () => {
                             type: "single",
                             schema: {
                               symbol: "process",
-                              id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                            }
+                              id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                            },
                           },
                           {
                             type: "single",
                             schema: {
                               symbol: "process",
-                              id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                            }
-                          }
-                        ]
-                      }
+                              id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                            },
+                          },
+                        ],
+                      },
                     },
                     {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                      }
+                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                      },
                     },
                     {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                      }
-                    }
-                  ]
-                }
+                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                      },
+                    },
+                  ],
+                },
               },
               {
                 type: "group-sibling-container",
@@ -99,76 +99,76 @@ export const useFlowchartBuilder = () => {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "67765332-0b02-477e-b378-bb0b36ca6a39"
-                      }
+                        id: "67765332-0b02-477e-b378-bb0b36ca6a39",
+                      },
                     },
                     {
                       type: "single",
                       schema: {
                         symbol: "data",
-                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                      }
+                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                      },
                     },
                     {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                      }
+                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                      },
                     },
                     {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                      }
+                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                      },
                     },
                     {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                      }
+                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                      },
                     },
                     {
                       type: "single",
                       schema: {
                         symbol: "process",
-                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf"
-                      }
-                    }
-                  ]
-                }
+                        id: "fe764f24-6e72-4d25-b547-4a12d2a4accf",
+                      },
+                    },
+                  ],
+                },
               },
               {
                 type: "single",
                 schema: {
                   symbol: "process",
-                  id: "67765332-0b02-477e-b378-bb0b36ca6a35"
-                }
-              }
-            ]
-          }
+                  id: "67765332-0b02-477e-b378-bb0b36ca6a35",
+                },
+              },
+            ],
+          },
         },
         {
           type: "single",
           schema: {
             symbol: "process",
-            id: "67765332-0b02-477e-b378-bb0b36ca6a35"
-          }
+            id: "67765332-0b02-477e-b378-bb0b36ca6a35",
+          },
         },
         {
           type: "single",
           schema: {
             symbol: "stop",
-            id: "f21bdf67-4f1e-4029-ba39-0b874b66d699"
-          }
-        }
-      ]
-    }
+            id: "f21bdf67-4f1e-4029-ba39-0b874b66d699",
+          },
+        },
+      ],
+    },
   });
 
   return {
-    newSchema
+    newSchema,
   };
 };

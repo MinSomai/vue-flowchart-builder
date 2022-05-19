@@ -8,7 +8,7 @@ const instance = getCurrentInstance();
 defineProps({
   schema: Object,
   depth: Number,
-  maxDepth: Number
+  maxDepth: Number,
 });
 
 const flowGroup = shallowRef(null);
@@ -21,15 +21,14 @@ onMounted(() => {
   }
 });
 
-const getComponent = type => {
-  if (type == SYMBOLTYPES.GROUP || type == SYMBOLTYPES.GROUPSIBLINGCONTAINER)
-    return flowGroup.value;
+const getComponent = (type) => {
+  if (type == SYMBOLTYPES.GROUP || type == SYMBOLTYPES.GROUPSIBLINGCONTAINER) return flowGroup.value;
   if (type == SYMBOLTYPES.SINGLE) return flowSingle.value;
 };
 
 // const emit = defineEmits(["update:schema"]);
 
-const getSiblingsOrChildrens = schema => {
+const getSiblingsOrChildrens = (schema) => {
   if (schema.children) return schema.children;
   if (schema.sibling) return schema.sibling;
 };
@@ -38,7 +37,7 @@ const getSiblingsOrChildrens = schema => {
   <div
     :class="{
       'group-sibling': schema.sibling,
-      'group-children': schema.children
+      'group-children': schema.children,
     }"
   >
     <component
@@ -50,11 +49,11 @@ const getSiblingsOrChildrens = schema => {
       :index="index"
       :max-depth="maxDepth"
       :depth="depth + 1"
-      :is-group-sibling-container="
-        child.type === SYMBOLTYPES.GROUPSIBLINGCONTAINER ? true : false
-      "
+      :is-group-sibling-container="child.type === SYMBOLTYPES.GROUPSIBLINGCONTAINER ? true : false"
       @add-sibling="$parent.addSibling"
       @remove-sibling="$parent.removeSibling"
+      @remove-sibling-group="$parent.removeSiblingGroup"
+      @remove-children-group="$parent.removeChildrenGroup"
     />
   </div>
 </template>
