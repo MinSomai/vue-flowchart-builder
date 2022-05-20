@@ -27,14 +27,14 @@ const props = defineProps({
   isGroupSiblingContainer: Boolean,
 });
 
-const emit = defineEmits(["update:schema", "remove-sibling-group", "remove-children-group"]);
+const emit = defineEmits(["update:schema", "remove-sibling-group", "remove-children-group", "add-children-group"]);
 
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
 
 const addSibling = ({ singleSchema, options }) => {
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
   if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
-    console.info("TODO: edge case");
+    console.info("TODO: edge case sibling", options);
     console.log(schema.value);
     return;
   }
@@ -70,9 +70,6 @@ const removeSibling = (itemIndex) => {
 };
 
 const addChildren = ({ symbolType }) => {
-  if (symbolType == SYMBOLTYPES.DECISION) {
-    return;
-  }
   const single = {
     type: "single",
     schema: {
@@ -83,6 +80,60 @@ const addChildren = ({ symbolType }) => {
 
   let updated_schema = deepClone(schema.value);
   updated_schema.children.splice(index.value + 1, 0, single);
+  emit("update:schema", updated_schema);
+};
+
+const addChildrenGroup = (groupIndex) => {
+  // wrap with another group
+  console.log("edge case, add group from the grand parent", groupIndex);
+
+  // if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
+  //   console.log("edge case");
+  //   let groupChildren = {
+  //     type: "group-sibling-container",
+  //     schema: {
+  //       symbol: "sibling-container",
+  //       id: "12312312",
+  //       sibling: [],
+  //     },
+  //   };
+  //
+  //   // not here pass one step above
+  //   // let updated_schema = deepClone(schema.value);
+  //   //
+  //   // if (updated_schema.children.length === 1) {
+  //   //   // edge case when removing the last children"); // maybe unnecessary
+  //   //   emit("remove-children-group", index.value);
+  //   // }
+  //   // updated_schema.children.splice(index.value + 1, 0, groupChildren);
+  //   // emit("update:schema", updated_schema);
+  //   return;
+  // }
+  //
+  // const group = {
+  //   type: "group",
+  //   schema: {
+  //     symbol: "decision",
+  //     id: uuidv4(),
+  //     children: [],
+  //   },
+  // };
+  //
+  // let updated_schema = deepClone(schema.value);
+  // updated_schema.children.splice(groupIndex.value + 1, 0, group);
+  // emit("update:schema", updated_schema);
+};
+
+const addGroup = ({ groupSchema, options }) => {
+  //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
+  if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
+    console.info("TODO: edge case group", options);
+    console.log(schema.value);
+    return;
+  }
+  // otherwise
+  let updated_schema = deepClone(schema.value);
+  updated_schema.sibling.splice(options.index + 1, 0, groupSchema);
   emit("update:schema", updated_schema);
 };
 
@@ -110,11 +161,17 @@ const removeChildrenGroupLocal = (itemIndex) => {
   emit("remove-children-group", itemIndex);
 };
 
+const addChildrenGroupLocal = (groupIndex) => {
+  emit("add-children-group", groupIndex);
+};
+
 defineExpose({
   addSibling,
   removeSibling,
   removeSiblingGroup,
   removeChildrenGroup,
+  addGroup,
+  addChildrenGroup,
   FlowSingle,
   FlowGroup,
 });
@@ -168,7 +225,7 @@ const getSymbol = (type) => {
           <div class="menu-item" @click="addChildren({ symbolType: 'process' })">Process</div>
           <div class="menu-item" @click="addChildren({ symbolType: 'io' })">IO</div>
           <div class="menu-item" @click="addChildren({ symbolType: 'data' })">Data</div>
-          <div class="menu-item" @click="addChildren({ symbolType: 'decision' })">Decision</div>
+          <div class="menu-item" @click="addChildrenGroupLocal(index)">Decision</div>
         </div>
       </div>
     </div>

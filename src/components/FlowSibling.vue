@@ -54,6 +54,8 @@ const getSiblingsOrChildrens = (schema) => {
       @remove-sibling="$parent.removeSibling"
       @remove-sibling-group="$parent.removeSiblingGroup"
       @remove-children-group="$parent.removeChildrenGroup"
+      @add-group="$parent.addGroup"
+      @add-children-group="$parent.addChildrenGroup"
     />
   </div>
 </template>

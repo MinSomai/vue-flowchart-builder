@@ -18,7 +18,7 @@ const props = defineProps({
   type: String,
 });
 
-const emit = defineEmits(["add-sibling", "remove-sibling", "add-decision"]);
+const emit = defineEmits(["add-sibling", "remove-sibling", "add-group"]);
 
 const { schema } = toRefs(props);
 
@@ -37,12 +37,27 @@ const addSibling = ({ symbolType }) => {
       id: uuidv4(),
     },
   };
-
-  if (symbolType == SYMBOLTYPES.DECISION) {
-    emit("add-decision", { singleSchema: single, options });
-    return;
-  }
   emit("add-sibling", { singleSchema: single, options });
+};
+
+const addGroup = ({ symbolType }) => {
+  const options = {
+    schema: props.schema,
+    index: props.index,
+    type: props.type,
+    depth: props.depth,
+  };
+
+  const group = {
+    type: "group",
+    schema: {
+      symbol: symbolType,
+      id: uuidv4(),
+      children: [],
+    },
+  };
+
+  emit("add-group", { groupSchema: group, options });
 };
 
 const removeSibling = ({ symbolType }) => {
@@ -89,7 +104,7 @@ const showActions = computed(() => {
         <div class="menu-item" @click="addSibling({ symbolType: 'process' })">Process</div>
         <div class="menu-item" @click="addSibling({ symbolType: 'io' })">IO</div>
         <div class="menu-item" @click="addSibling({ symbolType: 'data' })">Data</div>
-        <div class="menu-item" @click="addSibling({ symbolType: 'decision' })">Decision</div>
+        <div class="menu-item" @click="addGroup({ symbolType: 'decision' })">Decision</div>
       </div>
     </div>
   </div>
