@@ -69,61 +69,6 @@ const removeSibling = (itemIndex) => {
   emit("update:schema", updated_schema);
 };
 
-const addChildren = ({ symbolType }) => {
-  const single = {
-    type: "single",
-    schema: {
-      symbol: symbolType,
-      id: uuidv4(),
-    },
-  };
-
-  let updated_schema = deepClone(schema.value);
-  updated_schema.children.splice(index.value + 1, 0, single);
-  emit("update:schema", updated_schema);
-};
-
-const addChildrenGroup = (groupIndex) => {
-  // wrap with another group
-  console.log("edge case, add group from the grand parent", groupIndex);
-
-  // if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
-  //   console.log("edge case");
-  //   let groupChildren = {
-  //     type: "group-sibling-container",
-  //     schema: {
-  //       symbol: "sibling-container",
-  //       id: "12312312",
-  //       sibling: [],
-  //     },
-  //   };
-  //
-  //   // not here pass one step above
-  //   // let updated_schema = deepClone(schema.value);
-  //   //
-  //   // if (updated_schema.children.length === 1) {
-  //   //   // edge case when removing the last children"); // maybe unnecessary
-  //   //   emit("remove-children-group", index.value);
-  //   // }
-  //   // updated_schema.children.splice(index.value + 1, 0, groupChildren);
-  //   // emit("update:schema", updated_schema);
-  //   return;
-  // }
-  //
-  // const group = {
-  //   type: "group",
-  //   schema: {
-  //     symbol: "decision",
-  //     id: uuidv4(),
-  //     children: [],
-  //   },
-  // };
-  //
-  // let updated_schema = deepClone(schema.value);
-  // updated_schema.children.splice(groupIndex.value + 1, 0, group);
-  // emit("update:schema", updated_schema);
-};
-
 const addGroup = ({ groupSchema, options }) => {
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
   if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
@@ -134,6 +79,7 @@ const addGroup = ({ groupSchema, options }) => {
   // otherwise
   let updated_schema = deepClone(schema.value);
   updated_schema.sibling.splice(options.index + 1, 0, groupSchema);
+  // updated_schema.sibling.push(groupSchema);
   emit("update:schema", updated_schema);
 };
 
@@ -156,13 +102,36 @@ const removeChildrenGroup = (itemIndex) => {
   emit("update:schema", updated_schema);
 };
 
+// add children for the current group type (happens in the current component/ not delegated)
+const addChildrenGroupLocal = ({ symbolType }) => {
+  const group = {
+    type: "group",
+    schema: {
+      symbol: "decision",
+      id: uuidv4(),
+      children: [],
+    },
+  };
+
+  const single = {
+    type: "single",
+    schema: {
+      symbol: symbolType,
+      id: uuidv4(),
+    },
+  };
+  let updated_schema = deepClone(schema.value);
+  if (symbolType === SYMBOLTYPES.DECISION) {
+    updated_schema.children.push(group);
+  } else {
+    updated_schema.children.push(single);
+  }
+  emit("update:schema", updated_schema);
+};
+
 // delegates the deletion to parent
 const removeChildrenGroupLocal = (itemIndex) => {
   emit("remove-children-group", itemIndex);
-};
-
-const addChildrenGroupLocal = (groupIndex) => {
-  emit("add-children-group", groupIndex);
 };
 
 defineExpose({
@@ -171,7 +140,6 @@ defineExpose({
   removeSiblingGroup,
   removeChildrenGroup,
   addGroup,
-  addChildrenGroup,
   FlowSingle,
   FlowGroup,
 });
@@ -222,10 +190,10 @@ const getSymbol = (type) => {
         <div v-if="schema.symbol == 'main-container'">Vue Flowchart Builder</div>
 
         <div class="options-menu" v-if="depth > 0">
-          <div class="menu-item" @click="addChildren({ symbolType: 'process' })">Process</div>
-          <div class="menu-item" @click="addChildren({ symbolType: 'io' })">IO</div>
-          <div class="menu-item" @click="addChildren({ symbolType: 'data' })">Data</div>
-          <div class="menu-item" @click="addChildrenGroupLocal(index)">Decision</div>
+          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'process' })">Process</div>
+          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'io' })">IO</div>
+          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'data' })">Data</div>
+          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'decision' })">Decision</div>
         </div>
       </div>
     </div>
