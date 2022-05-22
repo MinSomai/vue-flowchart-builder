@@ -32,14 +32,28 @@ const emit = defineEmits(["update:schema", "remove-sibling-group", "remove-child
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
 
 const addSibling = ({ singleSchema, options }) => {
+  let updated_schema = deepClone(schema.value);
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
   if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
-    console.info("TODO: edge case sibling", options);
-    console.log(schema.value);
+    const groupSiblingContainer = {
+      type: "group-sibling-container",
+      schema: {
+        symbol: "sibling-container",
+        id: uuidv4(),
+        sibling: [],
+      },
+    };
+
+    let existingSibling = updated_schema.children[options.index];
+    groupSiblingContainer.schema.sibling.push(existingSibling);
+    groupSiblingContainer.schema.sibling.push(singleSchema);
+
+    emit("update:schema", updated_schema);
+    updated_schema.children.splice(options.index, 1, groupSiblingContainer);
+    emit("update:schema", updated_schema);
     return;
   }
   // otherwise
-  let updated_schema = deepClone(schema.value);
   updated_schema.sibling.splice(options.index + 1, 0, singleSchema);
   emit("update:schema", updated_schema);
 };
@@ -71,13 +85,27 @@ const removeSibling = (itemIndex) => {
 
 const addGroup = ({ groupSchema, options }) => {
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
+  let updated_schema = deepClone(schema.value);
   if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
-    console.info("TODO: edge case group", options);
-    console.log(schema.value);
+    const groupSiblingContainer = {
+      type: "group-sibling-container",
+      schema: {
+        symbol: "sibling-container",
+        id: uuidv4(),
+        sibling: [],
+      },
+    };
+
+    let existingSibling = updated_schema.children[options.index];
+    groupSiblingContainer.schema.sibling.push(existingSibling);
+    groupSiblingContainer.schema.sibling.push(groupSchema);
+
+    emit("update:schema", updated_schema);
+    updated_schema.children.splice(options.index, 1, groupSiblingContainer);
+    emit("update:schema", updated_schema);
     return;
   }
   // otherwise
-  let updated_schema = deepClone(schema.value);
   updated_schema.sibling.splice(options.index + 1, 0, groupSchema);
   // updated_schema.sibling.push(groupSchema);
   emit("update:schema", updated_schema);
