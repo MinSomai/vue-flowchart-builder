@@ -42,7 +42,7 @@ const getSiblingsOrChildrens = (schema) => {
   >
     <component
       v-for="(child, index) in getSiblingsOrChildrens(schema)"
-      :key="child.id"
+      :key="child.schema.id"
       :is="getComponent(child.type)"
       :type="child.type"
       v-model:schema="child.schema"

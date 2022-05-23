@@ -94,7 +94,7 @@ const showActions = computed(() => {
       [`depth-${depth}`]: true,
     }"
   >
-    <div class="symbol">
+    <div :id="schema.id" class="symbol">
       <component :is="getSymbol(schema.symbol)" />
 
       <div class="symbol-actions" v-if="showActions">

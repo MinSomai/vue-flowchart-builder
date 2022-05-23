@@ -1,5 +1,5 @@
 <script setup>
-import { markRaw, toRefs } from "vue";
+import { markRaw, toRefs, onMounted } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
@@ -206,9 +206,8 @@ const getSymbol = (type) => {
         'group-head': schema.sibling,
         'group-sibling-container-head': schema.children,
       }"
-      :id="schema.id"
     >
-      <div class="symbol">
+      <div class="symbol" :id="schema.id">
         <component :is="getSymbol(schema.symbol)" />
 
         <div class="symbol-actions">
