@@ -1,5 +1,5 @@
 <script setup>
-import { markRaw, toRefs, onMounted } from "vue";
+import { markRaw, toRefs } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
@@ -27,8 +27,14 @@ const props = defineProps({
   isGroupSiblingContainer: Boolean,
 });
 
-const emit = defineEmits(["update:schema", "remove-sibling-group", "remove-children-group", "add-children-group"]);
-
+const emit = defineEmits([
+  "update:schema",
+  "remove-sibling-group",
+  "remove-children-group",
+  "add-children-group",
+  "add-group",
+  "add-sibling",
+]);
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
 
 const addSibling = ({ singleSchema, options }) => {
@@ -53,7 +59,7 @@ const addSibling = ({ singleSchema, options }) => {
     emit("update:schema", updated_schema);
     return;
   }
-  // otherwise
+
   updated_schema.sibling.splice(options.index + 1, 0, singleSchema);
   emit("update:schema", updated_schema);
 };
@@ -131,7 +137,7 @@ const removeChildrenGroup = (itemIndex) => {
 };
 
 // add children for the current group type (happens in the current component/ not delegated)
-const addChildrenGroupLocal = ({ symbolType }) => {
+const addChildrenLocal = ({ symbolType }) => {
   const group = {
     type: "group",
     schema: {
@@ -155,6 +161,46 @@ const addChildrenGroupLocal = ({ symbolType }) => {
     updated_schema.children.push(single);
   }
   emit("update:schema", updated_schema);
+};
+
+// delegate/emit event one step above (or it's parent)
+const addSiblingLocal = ({ symbolType }) => {
+  const options = {
+    schema: props.schema,
+    index: props.index,
+    type: props.type,
+    depth: props.depth,
+  };
+
+  const single = {
+    type: "single",
+    schema: {
+      symbol: symbolType,
+      id: uuidv4(),
+    },
+  };
+  emit("add-sibling", { singleSchema: single, options });
+};
+
+// delegate/emit event one step above (or it's parent)
+const addGroupLocal = ({ symbolType }) => {
+  const options = {
+    schema: props.schema,
+    index: props.index,
+    type: props.type,
+    depth: props.depth,
+  };
+
+  const group = {
+    type: "group",
+    schema: {
+      symbol: symbolType,
+      id: uuidv4(),
+      children: [],
+    },
+  };
+
+  emit("add-group", { groupSchema: group, options });
 };
 
 // delegates the deletion to parent
@@ -217,10 +263,19 @@ const getSymbol = (type) => {
         <div v-if="schema.symbol == 'main-container'">Vue Flowchart Builder</div>
 
         <div class="options-menu" v-if="depth > 0">
-          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'process' })">Process</div>
-          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'io' })">IO</div>
-          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'data' })">Data</div>
-          <div class="menu-item" @click="addChildrenGroupLocal({ symbolType: 'decision' })">Decision</div>
+          <div>Children(main axis)</div>
+          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'process' })">Process</div>
+          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'io' })">IO</div>
+          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'data' })">Data</div>
+          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'decision' })">Decision</div>
+
+          <div class="options-menu options-menu-sibling" v-if="depth > 0">
+            <div>Sibling(cross axis)</div>
+            <div class="menu-item" @click="addSiblingLocal({ symbolType: 'process' })">Process</div>
+            <div class="menu-item" @click="addSiblingLocal({ symbolType: 'io' })">IO</div>
+            <div class="menu-item" @click="addSiblingLocal({ symbolType: 'data' })">Data</div>
+            <div class="menu-item" @click="addGroupLocal({ symbolType: 'decision' })">Decision</div>
+          </div>
         </div>
       </div>
     </div>

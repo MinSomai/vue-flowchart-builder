@@ -26,8 +26,6 @@ const getComponent = (type) => {
   if (type == SYMBOLTYPES.SINGLE) return flowSingle.value;
 };
 
-// const emit = defineEmits(["update:schema"]);
-
 const getSiblingsOrChildrens = (schema) => {
   if (schema.children) return schema.children;
   if (schema.sibling) return schema.sibling;
@@ -42,19 +40,19 @@ const getSiblingsOrChildrens = (schema) => {
   >
     <component
       v-for="(child, index) in getSiblingsOrChildrens(schema)"
+      v-model:schema="child.schema"
       :key="child.schema.id"
       :is="getComponent(child.type)"
       :type="child.type"
-      v-model:schema="child.schema"
       :index="index"
       :max-depth="maxDepth"
       :depth="depth + 1"
       :is-group-sibling-container="child.type === SYMBOLTYPES.GROUPSIBLINGCONTAINER ? true : false"
       @add-sibling="$parent.addSibling"
+      @add-group="$parent.addGroup"
       @remove-sibling="$parent.removeSibling"
       @remove-sibling-group="$parent.removeSiblingGroup"
       @remove-children-group="$parent.removeChildrenGroup"
-      @add-group="$parent.addGroup"
     />
   </div>
 </template>

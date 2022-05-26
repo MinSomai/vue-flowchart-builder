@@ -40,6 +40,11 @@ const addSibling = ({ symbolType }) => {
   emit("add-sibling", { singleSchema: single, options });
 };
 
+const removeSibling = ({ symbolType }) => {
+  if (symbolType == SYMBOLTYPES.START || symbolType === SYMBOLTYPES.STOP) return;
+  emit("remove-sibling", props.index);
+};
+
 const addGroup = ({ symbolType }) => {
   const options = {
     schema: props.schema,
@@ -58,11 +63,6 @@ const addGroup = ({ symbolType }) => {
   };
 
   emit("add-group", { groupSchema: group, options });
-};
-
-const removeSibling = ({ symbolType }) => {
-  if (symbolType == SYMBOLTYPES.START || symbolType === SYMBOLTYPES.STOP) return;
-  emit("remove-sibling", props.index);
 };
 
 const getSymbol = (type) => {

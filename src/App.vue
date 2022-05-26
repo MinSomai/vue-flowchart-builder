@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 import FlowGroup from "./components/FlowGroup.vue";
 import LeaderLine from "vue3-leaderline";
 
@@ -18,55 +18,78 @@ const lineOptions = {
   // dropShadow: true,
 };
 
-watch(
-  () => newSchema.mySchema,
-  (schema) => {
-    let edges = [];
+const edges = ref([]);
 
-    schema.sibling.forEach((sibling) => {
-      let edge = recursiveEdgeBuilder(sibling);
-      if (Array.isArray(edge)) {
-        edges = [...edges, ...edge];
-      } else {
-        edges.push(recursiveEdgeBuilder(sibling));
-      }
+const deleteArrows = () => {
+  for (let edge of edges.value) {
+    if (edge) edge.remove();
+  }
+};
+
+const buildArrows = async () => {
+  deleteArrows();
+  newSchema.mySchema.sibling.forEach((sibling) => {
+    let edge = recursiveEdgeBuilder(sibling);
+    if (Array.isArray(edge)) {
+      edges.value = [...edges.value, ...edge];
+    } else {
+      edges.value.push(recursiveEdgeBuilder(sibling));
+    }
+  });
+
+  edges.value = edges.value.map((edge) => {
+    if (!edge || !edge.start || !edge.end) return;
+    if (!document.getElementById(edge.end)) return;
+    if (!document.getElementById(edge.start)) return;
+
+    return new LeaderLine({
+      start: document.getElementById(edge.start),
+      end: document.getElementById(edge.end),
+      ...lineOptions,
     });
+  });
+  edges.value = edges.value.filter(Boolean);
+};
 
-    // NOTE: only for testing
-    setTimeout(() => {
-      edges.forEach((edge) => {
-        if (!edge) return;
-        if (!edge.start) return;
-        if (!edge.end) return;
-        if (!document.getElementById(edge.end)) return;
-        if (!document.getElementById(edge.start)) return;
+// watch(
+//   () => newSchema.mySchema,
+//   async (schema) => {
+//     deleteArrows();
+//
+//     schema.sibling.forEach((sibling) => {
+//       let edge = recursiveEdgeBuilder(sibling);
+//       if (Array.isArray(edge)) {
+//         edges.value = [...edges.value, ...edge];
+//       } else {
+//         edges.value.push(recursiveEdgeBuilder(sibling));
+//       }
+//     });
+//
+//     // NOTE: only for testing
+//     await nextTick();
+//     edges.value = edges.value.map((edge) => {
+//       if (!edge || !edge.start || !edge.end) return;
+//       if (!document.getElementById(edge.end)) return;
+//       if (!document.getElementById(edge.start)) return;
+//
+//       return new LeaderLine({
+//         start: document.getElementById(edge.start),
+//         end: document.getElementById(edge.end),
+//         ...lineOptions,
+//       });
+//     });
+//     edges.value = edges.value.filter(Boolean);
+//   },
+//   { immediate: true },
+// );
 
-        new LeaderLine({
-          start: document.getElementById(edge.start),
-          end: document.getElementById(edge.end),
-          ...lineOptions,
-        });
-      });
-    }, 200);
-  },
-  { immediate: true },
-);
-
-onMounted(async () => {
-  // await nextTick();
-  // edges.forEach((edge) => {
-  //   new LeaderLine({
-  //     start: document.getElementById(edge.start),
-  //     end: document.getElementById(edge.end),
-  //     ...lineOptions,
-  //   });
-  // });
-});
 const debug = false;
 </script>
 
 <template>
   <main>
+    <button @click="buildArrows">Build arrows</button>
+    <button @click="deleteArrows">Delete arrows</button>
     <div
       class="vue-flowchart-builder"
       :class="{

@@ -9,7 +9,11 @@ Flowchart builder, based on composite-pattern.
 ### TODO
 
 [] update add/remove function to update `.next` property
+
 [] rerender arrows on schema change
-[] add sibling below 'decision'/group types - current implementation adds children's only
+
+[x] add sibling below 'decision'/group types - current implementation adds children's only
+
 [] option to manually set '.next' node
+
 [] tests
