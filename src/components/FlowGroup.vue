@@ -3,12 +3,11 @@ import { markRaw, toRefs } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
+import { useSymbol } from "@/composables/useSymbol";
+import { useFlowSingle } from "@/composables/useFlowSingle";
 
 import deepClone from "@/helpers/deepClone";
 
-import Decision from "@/components/symbols/Decision.vue";
-import Process from "@/components/symbols/Process.vue";
-import Data from "@/components/symbols/Data.vue";
 import Cross from "@/assets/svg/Cross.vue";
 
 import FlowSingle from "@/components/FlowSingle.vue";
@@ -27,17 +26,21 @@ const props = defineProps({
   isGroupSiblingContainer: Boolean,
 });
 
+const { getSymbol } = useSymbol();
+
 const emit = defineEmits([
   "update:schema",
   "remove-sibling-group",
   "remove-children-group",
   "add-children-group",
-  "add-group",
   "add-sibling",
 ]);
+
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
 
-const addSibling = ({ singleSchema, options }) => {
+const { addSibling: addSiblingFromGroup } = useFlowSingle();
+
+const addSibling = ({ newSchema, options }) => {
   let updated_schema = deepClone(schema.value);
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
   if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
@@ -52,7 +55,7 @@ const addSibling = ({ singleSchema, options }) => {
 
     let existingSibling = updated_schema.children[options.index];
     groupSiblingContainer.schema.sibling.push(existingSibling);
-    groupSiblingContainer.schema.sibling.push(singleSchema);
+    groupSiblingContainer.schema.sibling.push(newSchema);
 
     emit("update:schema", updated_schema);
     updated_schema.children.splice(options.index, 1, groupSiblingContainer);
@@ -60,7 +63,7 @@ const addSibling = ({ singleSchema, options }) => {
     return;
   }
 
-  updated_schema.sibling.splice(options.index + 1, 0, singleSchema);
+  updated_schema.sibling.splice(options.index + 1, 0, newSchema);
   emit("update:schema", updated_schema);
 };
 
@@ -89,34 +92,6 @@ const removeSibling = (itemIndex) => {
   emit("update:schema", updated_schema);
 };
 
-const addGroup = ({ groupSchema, options }) => {
-  //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
-  let updated_schema = deepClone(schema.value);
-  if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
-    const groupSiblingContainer = {
-      type: "group-sibling-container",
-      schema: {
-        symbol: "sibling-container",
-        id: uuidv4(),
-        sibling: [],
-      },
-    };
-
-    let existingSibling = updated_schema.children[options.index];
-    groupSiblingContainer.schema.sibling.push(existingSibling);
-    groupSiblingContainer.schema.sibling.push(groupSchema);
-
-    emit("update:schema", updated_schema);
-    updated_schema.children.splice(options.index, 1, groupSiblingContainer);
-    emit("update:schema", updated_schema);
-    return;
-  }
-  // otherwise
-  updated_schema.sibling.splice(options.index + 1, 0, groupSchema);
-  // updated_schema.sibling.push(groupSchema);
-  emit("update:schema", updated_schema);
-};
-
 markRaw({
   FlowSingle,
   FlowGroup,
@@ -137,7 +112,7 @@ const removeChildrenGroup = (itemIndex) => {
 };
 
 // add children for the current group type (happens in the current component/ not delegated)
-const addChildrenLocal = ({ symbolType }) => {
+const addChildren = ({ symbolType }) => {
   const group = {
     type: "group",
     schema: {
@@ -154,6 +129,7 @@ const addChildrenLocal = ({ symbolType }) => {
       id: uuidv4(),
     },
   };
+
   let updated_schema = deepClone(schema.value);
   if (symbolType === SYMBOLTYPES.DECISION) {
     updated_schema.children.push(group);
@@ -161,46 +137,6 @@ const addChildrenLocal = ({ symbolType }) => {
     updated_schema.children.push(single);
   }
   emit("update:schema", updated_schema);
-};
-
-// delegate/emit event one step above (or it's parent)
-const addSiblingLocal = ({ symbolType }) => {
-  const options = {
-    schema: props.schema,
-    index: props.index,
-    type: props.type,
-    depth: props.depth,
-  };
-
-  const single = {
-    type: "single",
-    schema: {
-      symbol: symbolType,
-      id: uuidv4(),
-    },
-  };
-  emit("add-sibling", { singleSchema: single, options });
-};
-
-// delegate/emit event one step above (or it's parent)
-const addGroupLocal = ({ symbolType }) => {
-  const options = {
-    schema: props.schema,
-    index: props.index,
-    type: props.type,
-    depth: props.depth,
-  };
-
-  const group = {
-    type: "group",
-    schema: {
-      symbol: symbolType,
-      id: uuidv4(),
-      children: [],
-    },
-  };
-
-  emit("add-group", { groupSchema: group, options });
 };
 
 // delegates the deletion to parent
@@ -213,24 +149,9 @@ defineExpose({
   removeSibling,
   removeSiblingGroup,
   removeChildrenGroup,
-  addGroup,
   FlowSingle,
   FlowGroup,
 });
-
-const getSymbol = (type) => {
-  switch (type) {
-    case SYMBOLTYPES.DECISION:
-      return Decision;
-    case SYMBOLTYPES.PROCESS:
-      return Process;
-    case SYMBOLTYPES.DATA:
-      return Data;
-    case SYMBOLTYPES.PARALLEL:
-      // TODO: parallel type
-      return Data;
-  }
-};
 </script>
 
 <template>
@@ -264,17 +185,17 @@ const getSymbol = (type) => {
 
         <div class="options-menu" v-if="depth > 0">
           <div>Children(main axis)</div>
-          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'process' })">Process</div>
-          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'io' })">IO</div>
-          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'data' })">Data</div>
-          <div class="menu-item" @click="addChildrenLocal({ symbolType: 'decision' })">Decision</div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'process' })">Process</div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'io' })">IO</div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'data' })">Data</div>
+          <div class="menu-item" @click="addChildren({ symbolType: 'decision' })">Decision</div>
 
           <div class="options-menu options-menu-sibling" v-if="depth > 0">
             <div>Sibling(cross axis)</div>
-            <div class="menu-item" @click="addSiblingLocal({ symbolType: 'process' })">Process</div>
-            <div class="menu-item" @click="addSiblingLocal({ symbolType: 'io' })">IO</div>
-            <div class="menu-item" @click="addSiblingLocal({ symbolType: 'data' })">Data</div>
-            <div class="menu-item" @click="addGroupLocal({ symbolType: 'decision' })">Decision</div>
+            <div class="menu-item" @click="addSiblingFromGroup({ symbolType: 'process' })">Process</div>
+            <div class="menu-item" @click="addSiblingFromGroup({ symbolType: 'io' })">IO</div>
+            <div class="menu-item" @click="addSiblingFromGroup({ symbolType: 'data' })">Data</div>
+            <div class="menu-item" @click="addSiblingFromGroup({ symbolType: 'decision' })">Decision</div>
           </div>
         </div>
       </div>
