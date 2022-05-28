@@ -45,7 +45,20 @@ export const useRecursiveEdgeBuilder = () => {
       return innerEdges;
     }
   };
+
+  const getEdges = (schema) => {
+    let rawEdges = [];
+    schema.sibling.forEach((sibling) => {
+      let edge = recursiveEdgeBuilder(sibling);
+      if (Array.isArray(edge)) {
+        rawEdges = [...rawEdges, ...edge];
+      } else {
+        rawEdges.push(recursiveEdgeBuilder(sibling));
+      }
+    });
+    return rawEdges;
+  };
   return {
-    recursiveEdgeBuilder,
+    getEdges,
   };
 };

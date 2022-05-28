@@ -9,6 +9,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@panzoom/panzoom": "^4.5.0",
+    "anim-event": "^1.0.17",
     "uuid": "^8.3.2",
     "vue": "^3.2.31",
     "vue3-leaderline": "^1.2.11"
