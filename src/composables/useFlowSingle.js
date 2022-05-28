@@ -31,13 +31,14 @@ export const useFlowSingle = () => {
         symbol: symbolType,
         id: uuidv4(),
         children: [],
+        next: [],
       },
     };
 
     if (symbolType === SYMBOLTYPES.DECISION) {
-      emit("add-sibling", { newSchema: group, options });
+      emit("add-sibling", { newChild: group, options });
     } else {
-      emit("add-sibling", { newSchema: single, options });
+      emit("add-sibling", { newChild: single, options });
     }
   };
 

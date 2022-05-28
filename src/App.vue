@@ -69,15 +69,26 @@ onMounted(async () => {
   });
 
   flowChartPanzoom.value.addEventListener("panzoomchange", AnimEvent.add(repositionEdges), false);
+
   await nextTick();
   buildEdges();
+
+  // let leaderLinesContainer = document.getElementById("leaderLines");
+  // let rectWrapper = leaderLinesContainer.getBoundingClientRect();
+  //
+  // leaderLinesContainer.style.transform =
+  //   "translate(-" + (rectWrapper.left + scrollX) + "px, -" + (rectWrapper.top + scrollY) + "px)";
+  //
+  // document.querySelectorAll(".leader-line").forEach((lead) => {
+  //   leaderLinesContainer.appendChild(lead);
+  // });
 });
 
 watch(
   () => newSchema.mySchema,
   async () => {
-    // await nextTick();
-    // buildEdges();
+    await nextTick();
+    buildEdges();
   },
 );
 </script>
@@ -103,7 +114,20 @@ watch(
           <FlowGroup :depth="0" :index="0" :max-depth="5" v-model:schema="newSchema.mySchema" :id="newSchema.id" />
         </div>
       </div>
+      <!-- <div id="leaderLines"></div> -->
     </div>
+
+    <svg version="1.1" id="svg-clip">
+      <defs>
+        <rect id="clip-rect" />
+        <clipPath id="clip-1">
+          <use xlink:href="#clip-rect" />
+        </clipPath>
+        <clipPath id="clip-2">
+          <use xlink:href="#clip-rect" />
+        </clipPath>
+      </defs>
+    </svg>
     <pre>{{ newSchema.mySchema }}</pre>
     <br />
     EDGES<br />

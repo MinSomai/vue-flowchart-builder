@@ -35,9 +35,18 @@ const emit = defineEmits(["update:schema", "remove-parent", /*addSiblingFromGrou
 const { getSymbol } = useSymbol();
 const { addSibling: addSiblingFromGroup } = useFlowSingle();
 
-const addSibling = ({ newSchema, options }) => {
-  let updated_schema = deepClone(schema.value);
-  //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
+const addSibling = ({ newChild, options }) => {
+  const updated_schema = deepClone(schema.value);
+  const tempNext = options.schema.next;
+
+  if (newChild.type === SYMBOLTYPES.GROUP) {
+    newChild.schema.next.push(tempNext);
+  } else {
+    newChild.schema.next = tempNext;
+  }
+  //edge case:  when child is single inside the group, but not wrapped by single "GROUPSIBLINGCONTAINER",
+  // which is an anonymous group(cross axis)
+  // same case when removing a child
   if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
     const groupSiblingContainer = {
       type: "group-sibling-container",
@@ -48,36 +57,41 @@ const addSibling = ({ newSchema, options }) => {
       },
     };
 
-    let existingSibling = updated_schema.children[options.index];
-    groupSiblingContainer.schema.sibling.push(existingSibling);
-    groupSiblingContainer.schema.sibling.push(newSchema);
+    const updatedCurrentChildren = updated_schema.children[options.index];
+    updatedCurrentChildren.schema.next = newChild.schema.id;
 
-    emit("update:schema", updated_schema);
+    groupSiblingContainer.schema.sibling.push(updatedCurrentChildren);
+    groupSiblingContainer.schema.sibling.push(newChild);
+
     updated_schema.children.splice(options.index, 1, groupSiblingContainer);
     emit("update:schema", updated_schema);
     return;
   }
 
-  updated_schema.sibling.splice(options.index + 1, 0, newSchema);
+  // when adding new sibling, update the current sibling's next with newChild's id and add .next to the newChild
+  const updatedCurrentSibling = updated_schema.sibling[options.index];
+  updatedCurrentSibling.schema.next = newChild.schema.id;
+
+  updated_schema.sibling.splice(options.index, 1, updatedCurrentSibling, newChild);
   emit("update:schema", updated_schema);
 };
 
 // remove both the children's child and sibling's child
 const removeChild = ({ itemIndex, options }) => {
-  //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
-  // removing children
-  if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
-    let updated_schema = deepClone(schema.value);
+  let updated_schema = deepClone(schema.value);
 
+  // remove children
+  if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
+    // TODO: remove from the next[] of parent
     updated_schema.children.splice(itemIndex, 1);
     emit("update:schema", updated_schema);
     return;
   }
 
-  // removing sibling
-  let updated_schema = deepClone(schema.value);
+  // remove sibling
+  // edge case when removing the last sibling");
+  // remove parent too
   if (updated_schema.sibling.length === 1) {
-    // edge case when removing the last sibling");
     const options = {
       schema: props.schema,
       index: props.index,
@@ -86,7 +100,17 @@ const removeChild = ({ itemIndex, options }) => {
       isGroupSiblingContainer: isGroupSiblingContainer.value,
     };
     emit("remove-parent", { itemIndex: index.value, options });
+    return;
   }
+
+  // TODO: check if the child being deleted is used elsewhere
+  const tempPrev = updated_schema.sibling[itemIndex - 1];
+  if (tempPrev) {
+    const tempNext = options.schema.next;
+    tempPrev.schema.next = tempNext;
+    updated_schema.sibling.splice(itemIndex - 1, 1, tempPrev);
+  }
+
   updated_schema.sibling.splice(itemIndex, 1);
   emit("update:schema", updated_schema);
 };
@@ -94,10 +118,19 @@ const removeChild = ({ itemIndex, options }) => {
 const removeParent = ({ itemIndex, options }) => {
   let updated_schema = deepClone(schema.value);
 
-  if (options.isGroupSiblingContainer) {
-    updated_schema.children.splice(itemIndex, 1);
-  } else {
+  if (updated_schema.symbol == SYMBOLTYPES.SIBLINGCONTAINER) {
     updated_schema.sibling.splice(itemIndex, 1);
+  } else {
+    updated_schema.children.splice(itemIndex, 1);
+    // emit("remove-parent", {
+    //   itemIndex: index.value,
+    //   options: {
+    //     index: index.value,
+    //     schema: schema.value,
+    //     isGroupSiblingContainer: isGroupSiblingContainer.value,
+    //   },
+    // });
+    // return;
   }
   emit("update:schema", updated_schema);
 };
@@ -137,7 +170,7 @@ defineExpose({
       }"
     >
       <div class="symbol" :id="schema.id">
-        <component :is="getSymbol(schema.symbol)" />
+        <component :is="getSymbol(schema.symbol)" :schema="schema" />
 
         <div class="symbol-actions">
           <Cross

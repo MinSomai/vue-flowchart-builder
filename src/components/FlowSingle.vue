@@ -36,7 +36,7 @@ const isSymbolRemovable = computed(() => {
     }"
   >
     <div :id="schema.id" class="symbol">
-      <component :is="getSymbol(schema.symbol)" />
+      <component :is="getSymbol(schema.symbol)" :schema="schema" />
 
       <div class="symbol-actions" v-if="isSymbolRemovable">
         <Cross @click="removeSibling({ symbolType: schema.symbol })" />

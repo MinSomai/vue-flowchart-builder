@@ -9,15 +9,24 @@ import deepClone from "@/helpers/deepClone";
  */
 export const useFlowGroup = () => {
   const { props, emit } = getCurrentInstance();
-  const { schema } = toRefs(props);
+  const { schema, isGroupSiblingContainer } = toRefs(props);
 
   const addChildren = ({ symbolType }) => {
+    const options = {
+      schema: props.schema,
+      index: props.index,
+      type: props.type,
+      depth: props.depth,
+      isGroupSiblingContainer: isGroupSiblingContainer.value,
+    };
+
     const group = {
       type: "group",
       schema: {
         symbol: "decision",
         id: uuidv4(),
         children: [],
+        next: [],
       },
     };
 
