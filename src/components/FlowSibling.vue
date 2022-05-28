@@ -49,9 +49,8 @@ const getSiblingsOrChildrens = (schema) => {
       :depth="depth + 1"
       :is-group-sibling-container="child.type === SYMBOLTYPES.GROUPSIBLINGCONTAINER ? true : false"
       @add-sibling="$parent.addSibling"
-      @remove-sibling="$parent.removeSibling"
-      @remove-sibling-group="$parent.removeSiblingGroup"
-      @remove-children-group="$parent.removeChildrenGroup"
+      @remove-child="$parent.removeChild"
+      @remove-parent="$parent.removeParent"
     />
   </div>
 </template>

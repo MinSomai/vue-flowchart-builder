@@ -43,7 +43,13 @@ export const useFlowSingle = () => {
 
   const removeSibling = ({ symbolType }) => {
     if (symbolType == SYMBOLTYPES.START || symbolType === SYMBOLTYPES.STOP) return;
-    emit("remove-sibling", props.index);
+    const options = {
+      schema: props.schema,
+      index: props.index,
+      type: props.type,
+      depth: props.depth,
+    };
+    emit("remove-child", { itemIndex: props.index, options });
   };
 
   return {

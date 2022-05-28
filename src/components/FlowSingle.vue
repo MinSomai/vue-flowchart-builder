@@ -7,7 +7,8 @@ import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
 import { useFlowSingle } from "@/composables/useFlowSingle";
 import { useSymbol } from "@/composables/useSymbol";
 
-defineEmits(["add-sibling", "remove-sibling"]);
+defineEmits(["add-sibling", "remove-child"]);
+
 const props = defineProps({
   schema: Object,
   index: Number,

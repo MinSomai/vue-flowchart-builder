@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { SYMBOLTYPES } from "@/helpers/const/SymbolTypes";
 import { useSymbol } from "@/composables/useSymbol";
 import { useFlowSingle } from "@/composables/useFlowSingle";
+import { useFlowGroup } from "@/composables/useFlowGroup";
 
 import deepClone from "@/helpers/deepClone";
 
@@ -26,18 +27,12 @@ const props = defineProps({
   isGroupSiblingContainer: Boolean,
 });
 
-const { getSymbol } = useSymbol();
-
-const emit = defineEmits([
-  "update:schema",
-  "remove-sibling-group",
-  "remove-children-group",
-  "add-children-group",
-  "add-sibling",
-]);
-
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
+const { addChildren } = useFlowGroup();
 
+const emit = defineEmits(["update:schema", "remove-parent", /*addSiblingFromGroup */ "add-sibling"]);
+
+const { getSymbol } = useSymbol();
 const { addSibling: addSiblingFromGroup } = useFlowSingle();
 
 const addSibling = ({ newSchema, options }) => {
@@ -67,16 +62,13 @@ const addSibling = ({ newSchema, options }) => {
   emit("update:schema", updated_schema);
 };
 
-const removeSibling = (itemIndex) => {
+// remove both the children's child and sibling's child
+const removeChild = ({ itemIndex, options }) => {
   //edge case:  when is single but not wrapped by single "GROUPSIBLINGCONTAINER"
   // removing children
   if (!isGroupSiblingContainer.value && schema.value.symbol != SYMBOLTYPES.SIBLINGCONTAINER) {
     let updated_schema = deepClone(schema.value);
 
-    if (updated_schema.children.length === 1) {
-      // edge case when removing the last children"); // maybe unnecessary
-      emit("remove-children-group", index.value);
-    }
     updated_schema.children.splice(itemIndex, 1);
     emit("update:schema", updated_schema);
     return;
@@ -86,9 +78,27 @@ const removeSibling = (itemIndex) => {
   let updated_schema = deepClone(schema.value);
   if (updated_schema.sibling.length === 1) {
     // edge case when removing the last sibling");
-    emit("remove-sibling-group", index.value);
+    const options = {
+      schema: props.schema,
+      index: props.index,
+      type: props.type,
+      depth: props.depth,
+      isGroupSiblingContainer: isGroupSiblingContainer.value,
+    };
+    emit("remove-parent", { itemIndex: index.value, options });
   }
   updated_schema.sibling.splice(itemIndex, 1);
+  emit("update:schema", updated_schema);
+};
+
+const removeParent = ({ itemIndex, options }) => {
+  let updated_schema = deepClone(schema.value);
+
+  if (options.isGroupSiblingContainer) {
+    updated_schema.children.splice(itemIndex, 1);
+  } else {
+    updated_schema.sibling.splice(itemIndex, 1);
+  }
   emit("update:schema", updated_schema);
 };
 
@@ -97,58 +107,10 @@ markRaw({
   FlowGroup,
 });
 
-// remove hidden composite
-const removeSiblingGroup = (itemIndex) => {
-  let updated_schema = deepClone(schema.value);
-  updated_schema.children.splice(itemIndex, 1);
-  emit("update:schema", updated_schema);
-};
-
-// remove normal group/composite
-const removeChildrenGroup = (itemIndex) => {
-  let updated_schema = deepClone(schema.value);
-  updated_schema.sibling.splice(itemIndex, 1);
-  emit("update:schema", updated_schema);
-};
-
-// add children for the current group type (happens in the current component/ not delegated)
-const addChildren = ({ symbolType }) => {
-  const group = {
-    type: "group",
-    schema: {
-      symbol: "decision",
-      id: uuidv4(),
-      children: [],
-    },
-  };
-
-  const single = {
-    type: "single",
-    schema: {
-      symbol: symbolType,
-      id: uuidv4(),
-    },
-  };
-
-  let updated_schema = deepClone(schema.value);
-  if (symbolType === SYMBOLTYPES.DECISION) {
-    updated_schema.children.push(group);
-  } else {
-    updated_schema.children.push(single);
-  }
-  emit("update:schema", updated_schema);
-};
-
-// delegates the deletion to parent
-const removeChildrenGroupLocal = (itemIndex) => {
-  emit("remove-children-group", itemIndex);
-};
-
 defineExpose({
   addSibling,
-  removeSibling,
-  removeSiblingGroup,
-  removeChildrenGroup,
+  removeChild,
+  removeParent,
   FlowSingle,
   FlowGroup,
 });
@@ -178,7 +140,20 @@ defineExpose({
         <component :is="getSymbol(schema.symbol)" />
 
         <div class="symbol-actions">
-          <Cross @click="removeChildrenGroupLocal(index)" />
+          <Cross
+            @click="
+              $emit('remove-parent', {
+                itemIndex: index,
+                options: {
+                  index,
+                  schema,
+                  depth,
+                  type,
+                  isGroupSiblingContainer,
+                },
+              })
+            "
+          />
         </div>
 
         <div v-if="schema.symbol == 'main-container'">Vue Flowchart Builder</div>

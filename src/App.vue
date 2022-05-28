@@ -76,8 +76,8 @@ onMounted(async () => {
 watch(
   () => newSchema.mySchema,
   async () => {
-    await nextTick();
-    buildEdges();
+    // await nextTick();
+    // buildEdges();
   },
 );
 </script>
