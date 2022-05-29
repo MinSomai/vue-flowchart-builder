@@ -15,8 +15,8 @@
       height="100"
       rx="7"
       ry="7"
-      fill="rgb(255, 255, 255)"
-      stroke="rgb(0, 0, 0)"
+      fill="var(--color-background)"
+      stroke="var(--color-text)"
       stroke-width="2"
       pointer-events="none"
     />

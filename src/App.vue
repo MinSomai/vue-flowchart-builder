@@ -17,7 +17,7 @@ const flowChartPanzoom = ref(null);
 const lineOptions = {
   path: "grid",
   size: 2.5,
-  color: "black",
+  color: "currentColor",
   startPlug: "disc",
   startPlugSize: 2,
   // dropShadow: true,
@@ -66,6 +66,7 @@ onMounted(async () => {
     maxScale: 1.5,
     minScale: 0.7,
     startScale: 1,
+    disableYAxis: true,
   });
 
   flowChartPanzoom.value.addEventListener("panzoomchange", AnimEvent.add(repositionEdges), false);
@@ -120,6 +121,7 @@ watch(
     <svg version="1.1" id="svg-clip">
       <defs>
         <rect id="clip-rect" />
+
         <clipPath id="clip-1">
           <use xlink:href="#clip-rect" />
         </clipPath>
@@ -128,6 +130,8 @@ watch(
         </clipPath>
       </defs>
     </svg>
+
+    <br />
     <pre>{{ newSchema.mySchema }}</pre>
     <br />
     EDGES<br />
@@ -140,12 +144,13 @@ watch(
 .panzoom-parent {
   position: relative;
   box-shadow: inset 0 0 5px rgba(223, 212, 212, 0.5);
-  margin: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   padding: 20px;
   border: 1px solid black;
 }
 .flowchart-panzoom {
-  padding: 20px;
+  padding: 10px;
 }
 .flowchart-actions {
   position: fixed;

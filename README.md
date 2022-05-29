@@ -10,7 +10,7 @@ Flowchart builder, based on composite-pattern.
 
 - [ ] update add/remove function to update `.next` property
 
-- [ ] rerender arrows on schema change
+- [x] re-render edges on schema update
 
 - [x] add sibling below 'decision'/group types - current implementation adds children's only
 

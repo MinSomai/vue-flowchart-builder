@@ -10,8 +10,8 @@
   >
     <path
       d="M 31.61 1 L 70.39 1 C 87.29 1 101 14.43 101 31 C 101 47.57 87.29 61 70.39 61 L 31.61 61 C 14.71 61 1 47.57 1 31 C 1 14.43 14.71 1 31.61 1 Z"
-      fill="rgb(255, 255, 255)"
-      stroke="rgb(0, 0, 0)"
+      fill="var(--color-background)"
+      stroke="var(--color-text)"
       stroke-width="2"
       stroke-miterlimit="10"
       pointer-events="none"
