@@ -15,7 +15,7 @@ const DEBUG = ref(false);
 const flowChartPanzoom = ref(null);
 
 const lineOptions = {
-  path: "grid",
+  path: "fluid",
   size: 2.5,
   color: "currentColor",
   startPlug: "disc",
@@ -102,7 +102,7 @@ watch(
         <button @click="deleteEdges">Delete edges</button><br />
         <button @click="panzoom.zoomIn">Zoom in</button><br />
         <button @click="panzoom.zoomOut">Zoom out</button><br />
-        <button @click="panzoom.reset">Zoom reset</button><br />
+        <button @click="panzoom.reset">Reset</button><br />
         <button @click="DEBUG = !DEBUG">Toggle Debug CSS</button><br />
       </div>
       <div ref="flowChartPanzoom" id="flowChartPanzoom" class="flowchart-panzoom">
@@ -148,6 +148,8 @@ watch(
   margin-bottom: 10px;
   padding: 20px;
   border: 1px solid black;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 .flowchart-panzoom {
   padding: 10px;
