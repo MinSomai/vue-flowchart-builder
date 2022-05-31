@@ -78,12 +78,15 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 90px;
+  /* row-gap: 90px;     */
+  /* column-gap: 100px; */
   column-gap: 100px;
+  row-gap: 190px;
 }
 
 .group-children {
-  column-gap: 100px;
+  /* column-gap: 100px; */
+  column-gap: 200px;
 }
 
 .group-children:not(.depth-0) {

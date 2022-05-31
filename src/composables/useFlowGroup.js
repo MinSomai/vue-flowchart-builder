@@ -68,7 +68,12 @@ export const useFlowGroup = () => {
       }
       updated_schema.children.push(single);
     }
+    const updateOptions = {
+      index: updated_schema.children.length - 1,
+    };
     emit("update:schema", updated_schema);
+    emit("update-sibling", { updatedItem: updated_schema, options, updateOptions });
+    // emit("update:schema", updated_schema);
   };
 
   return {

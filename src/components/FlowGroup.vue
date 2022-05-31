@@ -30,19 +30,19 @@ const props = defineProps({
 const { schema, isGroupSiblingContainer, index } = toRefs(props);
 const { addChildren } = useFlowGroup();
 
-const emit = defineEmits(["update:schema", "remove-parent", /*addSiblingFromGroup */ "add-sibling"]);
+const emit = defineEmits(["update:schema", "remove-parent", /*addSiblingFromGroup */ "add-sibling", "update-sibling"]);
 
 const { getSymbol } = useSymbol();
 const { addSibling: addSiblingFromGroup } = useFlowSingle();
 
-const addSibling = ({ newChild, options }) => {
+const addSibling = ({ newItem, options }) => {
   const updated_schema = deepClone(schema.value);
   const tempNext = options.schema.next;
 
-  if (newChild.type === SYMBOLTYPES.GROUP) {
-    newChild.schema.next.push(tempNext);
+  if (newItem.type === SYMBOLTYPES.GROUP) {
+    newItem.schema.next.push(tempNext);
   } else {
-    newChild.schema.next = tempNext;
+    newItem.schema.next = tempNext;
   }
   //edge case:  when child is single inside the group, but not wrapped by single "GROUPSIBLINGCONTAINER",
   // which is an anonymous group(cross axis)
@@ -58,21 +58,34 @@ const addSibling = ({ newChild, options }) => {
     };
 
     const updatedCurrentChildren = updated_schema.children[options.index];
-    updatedCurrentChildren.schema.next = newChild.schema.id;
+    updatedCurrentChildren.schema.next = newItem.schema.id;
 
     groupSiblingContainer.schema.sibling.push(updatedCurrentChildren);
-    groupSiblingContainer.schema.sibling.push(newChild);
+    groupSiblingContainer.schema.sibling.push(newItem);
 
     updated_schema.children.splice(options.index, 1, groupSiblingContainer);
     emit("update:schema", updated_schema);
     return;
   }
 
-  // when adding new sibling, update the current sibling's next with newChild's id and add .next to the newChild
+  // when adding new sibling, update the current sibling's next with newItem's id and add .next to the newItem
   const updatedCurrentSibling = updated_schema.sibling[options.index];
-  updatedCurrentSibling.schema.next = newChild.schema.id;
+  updatedCurrentSibling.schema.next = newItem.schema.id;
 
-  updated_schema.sibling.splice(options.index, 1, updatedCurrentSibling, newChild);
+  updated_schema.sibling.splice(options.index, 1, updatedCurrentSibling, newItem);
+  emit("update:schema", updated_schema);
+};
+
+const updateSibling = ({ updatedItem, options, updateOptions }) => {
+  const updated_schema = deepClone(schema.value);
+  const currentSibling = updated_schema.sibling[options.index + 1];
+  if (updateOptions) {
+    let toUpdateChild = updatedItem.children[updateOptions.index];
+    toUpdateChild.schema.next = currentSibling.schema.next;
+    updatedItem.children.splice(updateOptions.index, 1, toUpdateChild);
+  }
+
+  // updated_schema.sibling.splice(options.index, 1, updatedItem);
   emit("update:schema", updated_schema);
 };
 
@@ -142,6 +155,7 @@ markRaw({
 
 defineExpose({
   addSibling,
+  updateSibling,
   removeChild,
   removeParent,
   FlowSingle,

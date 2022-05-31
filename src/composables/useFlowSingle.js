@@ -36,9 +36,9 @@ export const useFlowSingle = () => {
     };
 
     if (symbolType === SYMBOLTYPES.DECISION) {
-      emit("add-sibling", { newChild: group, options });
+      emit("add-sibling", { newItem: group, options });
     } else {
-      emit("add-sibling", { newChild: single, options });
+      emit("add-sibling", { newItem: single, options });
     }
   };
 

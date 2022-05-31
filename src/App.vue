@@ -41,6 +41,8 @@ const buildEdges = async () => {
       start: document.getElementById(edge.start),
       end: document.getElementById(edge.end),
       ...lineOptions,
+      startLabel: edge.start,
+      endLabel: edge.end,
     });
   });
   leaderLineEdges.value = leaderLineEdges.value.filter(Boolean);
