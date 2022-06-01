@@ -65,7 +65,6 @@ const addSibling = ({ newItem, options }) => {
 
     updated_schema.children.splice(options.index, 1, groupSiblingContainer);
     emit("update:schema", updated_schema);
-    return;
   }
 
   // when adding new sibling, update the current sibling's next with newItem's id and add .next to the newItem
@@ -77,15 +76,24 @@ const addSibling = ({ newItem, options }) => {
 };
 
 const updateSibling = ({ updatedItem, options, updateOptions }) => {
+  // update group's child's next id
   const updated_schema = deepClone(schema.value);
-  const currentSibling = updated_schema.sibling[options.index + 1];
+
+  const nextSibling = updated_schema.sibling[options.index + 1];
+  const currentSibling = updated_schema.sibling[options.index];
+  const toUpdateChild = updatedItem.children[updateOptions.index];
+
   if (updateOptions) {
-    let toUpdateChild = updatedItem.children[updateOptions.index];
-    toUpdateChild.schema.next = currentSibling.schema.next;
-    updatedItem.children.splice(updateOptions.index, 1, toUpdateChild);
+    if (toUpdateChild.type === SYMBOLTYPES.GROUP) {
+      toUpdateChild.schema.next.push(nextSibling.schema.id);
+    } else {
+      toUpdateChild.schema.next = nextSibling.schema.id;
+    }
   }
 
-  // updated_schema.sibling.splice(options.index, 1, updatedItem);
+  updatedItem.children.splice(updateOptions.index, 1, toUpdateChild);
+  currentSibling.schema.children.splice(updateOptions.index, 1, toUpdateChild);
+  updated_schema.sibling.splice(options.index, 1, currentSibling);
   emit("update:schema", updated_schema);
 };
 

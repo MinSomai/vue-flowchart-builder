@@ -45,10 +45,10 @@ export const useFlowGroup = () => {
         updated_schema.next = [group.schema.id];
       }
       if (updated_schema.children.length > 0) {
-        const lastSibling = updated_schema.children[updated_schema.children.length - 1];
+        // const lastSibling = updated_schema.children[updated_schema.children.length - 1];
 
         group.schema.next = [];
-        group.schema.next.push(lastSibling.schema.next);
+        // group.schema.next.push(lastSibling.schema.next);
         updated_schema.next.push(group.schema.id);
       }
       updated_schema.children.push(group);
@@ -63,7 +63,7 @@ export const useFlowGroup = () => {
         if (lastSibling.type == SYMBOLTYPES.SIBLINGCONTAINER) {
           console.log("container");
         }
-        single.schema.next = updated_schema.children[updated_schema.children.length - 1].schema.next;
+        // single.schema.next = updated_schema.children[updated_schema.children.length - 1].schema.next;
         updated_schema.next.push(single.schema.id);
       }
       updated_schema.children.push(single);
