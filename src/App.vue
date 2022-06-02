@@ -15,7 +15,7 @@ const DEBUG = ref(false);
 const flowChartPanzoom = ref(null);
 
 const lineOptions = {
-  path: "fluid",
+  path: "magnet",
   size: 2.5,
   color: "currentColor",
   startPlug: "disc",
@@ -41,7 +41,7 @@ const buildEdges = async () => {
       start: document.getElementById(edge.start),
       end: document.getElementById(edge.end),
       ...lineOptions,
-      startLabel: edge.start,
+      // startLabel: edge.start,
       endLabel: edge.end,
     });
   });

@@ -13,7 +13,7 @@ export const useFlowchartBuilder = () => {
           type: "single",
           schema: {
             symbol: "start",
-            id: "5df7e663-09c5-4af5-bdcc-bd0e38548f04",
+            id: "start",
             next: "ecc12bbe-f8e7-452a-85d9-f8f21d7fd343",
           },
         },
@@ -79,7 +79,7 @@ export const useFlowchartBuilder = () => {
                 schema: {
                   symbol: "process",
                   id: "b41c50fd-0706-4ea9-a74d-4519e4cb0189",
-                  next: "f21bdf67-4f1e-4029-ba39-0b874b66d699",
+                  next: "stop",
                 },
               },
               {
@@ -108,7 +108,7 @@ export const useFlowchartBuilder = () => {
                             schema: {
                               symbol: "process",
                               id: "89ef55b5-8ba5-488d-8152-177b7fdf2962",
-                              next: "f21bdf67-4f1e-4029-ba39-0b874b66d699",
+                              next: "stop",
                             },
                           },
                           {
@@ -116,7 +116,7 @@ export const useFlowchartBuilder = () => {
                             schema: {
                               symbol: "io",
                               id: "89c31ccd-8e19-4f1f-be0f-0fbbd96d9891",
-                              next: "f21bdf67-4f1e-4029-ba39-0b874b66d699",
+                              next: "stop",
                             },
                           },
                         ],
@@ -132,7 +132,7 @@ export const useFlowchartBuilder = () => {
           type: "single",
           schema: {
             symbol: "stop",
-            id: "f21bdf67-4f1e-4029-ba39-0b874b66d699",
+            id: "stop",
             next: "stop",
           },
         },

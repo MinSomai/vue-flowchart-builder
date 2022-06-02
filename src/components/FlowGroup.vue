@@ -65,11 +65,16 @@ const addSibling = ({ newItem, options }) => {
 
     updated_schema.children.splice(options.index, 1, groupSiblingContainer);
     emit("update:schema", updated_schema);
+    return;
   }
 
   // when adding new sibling, update the current sibling's next with newItem's id and add .next to the newItem
   const updatedCurrentSibling = updated_schema.sibling[options.index];
-  updatedCurrentSibling.schema.next = newItem.schema.id;
+  if (updatedCurrentSibling.type === SYMBOLTYPES.GROUP) {
+    updatedCurrentSibling.schema.next.push(newItem.schema.id);
+  } else {
+    updatedCurrentSibling.schema.next = newItem.schema.id;
+  }
 
   updated_schema.sibling.splice(options.index, 1, updatedCurrentSibling, newItem);
   emit("update:schema", updated_schema);
@@ -79,15 +84,23 @@ const updateSibling = ({ updatedItem, options, updateOptions }) => {
   // update group's child's next id
   const updated_schema = deepClone(schema.value);
 
+  // TODO: edge case when the last item is a group/decision
   const nextSibling = updated_schema.sibling[options.index + 1];
   const currentSibling = updated_schema.sibling[options.index];
   const toUpdateChild = updatedItem.children[updateOptions.index];
-
-  if (updateOptions) {
+  if (nextSibling) {
+    if (updateOptions) {
+      if (toUpdateChild.type === SYMBOLTYPES.GROUP) {
+        toUpdateChild.schema.next.push(nextSibling.schema.id);
+      } else {
+        toUpdateChild.schema.next = nextSibling.schema.id;
+      }
+    }
+  } else {
     if (toUpdateChild.type === SYMBOLTYPES.GROUP) {
-      toUpdateChild.schema.next.push(nextSibling.schema.id);
+      toUpdateChild.schema.next.push("stop");
     } else {
-      toUpdateChild.schema.next = nextSibling.schema.id;
+      toUpdateChild.schema.next = "stop";
     }
   }
 

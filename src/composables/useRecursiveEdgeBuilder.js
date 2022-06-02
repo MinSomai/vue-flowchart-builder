@@ -2,6 +2,9 @@
 export const useRecursiveEdgeBuilder = () => {
   const recursiveEdgeBuilder = (child) => {
     if (child.type === "single") {
+      if (child.schema.symbol == "stop") {
+        return;
+      }
       const edge = {
         start: child.schema.id,
         end: child.schema.next,
