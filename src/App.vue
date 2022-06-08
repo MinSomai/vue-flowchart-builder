@@ -7,9 +7,11 @@ import LeaderLine from "vue3-leaderline";
 
 import { useFlowchartBuilder } from "@/composables/useFlowchartBuilder";
 import { useRecursiveEdgeBuilder } from "@/composables/useRecursiveEdgeBuilder";
+import { useRecursiveFlowchartHelper } from "@/composables/useRecursiveFlowchartHelper";
 
 const { newSchema } = useFlowchartBuilder();
 const { getEdges } = useRecursiveEdgeBuilder();
+const { getNodes } = useRecursiveFlowchartHelper();
 
 const DEBUG = ref(false);
 const flowChartPanzoom = ref(null);
@@ -26,6 +28,11 @@ const lineOptions = {
 const leaderLineEdges = ref([]); // instances of leader lines
 const edges = ref([]); // normal edge definitions
 const panzoom = ref(null); // ref for the panzoom element
+
+const buildNodes = () => {
+  let rawNodes = getNodes(newSchema.mySchema);
+  console.log(rawNodes);
+};
 
 const buildEdges = async () => {
   deleteEdges();
@@ -92,6 +99,7 @@ watch(
   async () => {
     await nextTick();
     buildEdges();
+    buildNodes();
   },
 );
 </script>
